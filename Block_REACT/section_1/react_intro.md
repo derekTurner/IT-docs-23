@@ -1,7 +1,7 @@
 ## Introduction to React
 
 
-[React](https://reactjs.org) is a javascript library for building user interfaces.
+[React](https://react.dev/) is a javascript library for building user interfaces.
 
 In normal usage react code would be developed in a [node](https://nodejs.org/en/) environment and then built to produce a website with an index.html page and all the associated javascript ready to run on a browser.  Unnecessary javascript from the development environment should not be brought into the final public folder.
 

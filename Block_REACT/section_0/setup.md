@@ -184,6 +184,8 @@ Installation runs through:
 
 ![install docker](installDocker.png)
 
+At this time the current version of docker is 4.22.1.  Please do not update your docker version beyond this while referring to these notes.
+
 You must log out of windows to complete installation, so log out.  This is less drastic than a restart all you need to do is enter your pin to get back and the service agreement appears.
 
 Note that docker is free for personal use and education.
@@ -259,6 +261,8 @@ Undoubtedly you will decide wheter you prefer to manage your github files from D
 
 Download git [here](https://git-scm.com/).  You will find an online book on git here, but you dont need to issue git commands directly if you use VSC.
 
+Current version of Git is 2.42.0
+
 ![git logo](git.png)
 
 There is a 64-bit Git for windows setup.
@@ -333,6 +337,24 @@ The source control icon in visual studio will now allow you to interact directly
 
 ![source control](sourceControl.png)
 
+The version 2.37.1 shown here will work fine, but if you have an old version of git installed from version 2.17.0 you can update it by opening powershell and use
+
+> git update-for-windows
+
+```code
+PowerShell 7.3.6
+PS C:\Users\username> git --version
+git version 2.37.1.windows.1
+PS C:\Users\username>
+PS C:\Users\username> git update-git-for-windows
+Git for Windows 2.37.1.windows.1 (64-bit)
+Update 2.42.0.windows.2 is available
+Download and install Git for Windows v2.42.0.windows.2 [N/y]? y
+################################################################################################################ 100.0%
+PS C:\Users\username> git --version
+git version 2.42.0.windows.2
+```
+
 ## VSC extensions
 
 From the extensions menu search for the following useful extensions.
@@ -341,8 +363,18 @@ Docker
 
 ![docker extension](dockerExtension.png)
 
-Remote containers
+Development containers
 
-![remote containers](remoteContainers.png)
+![development containers](devContainers.png)
 
 That is sufficient set up and these features will be used as the module progresses.
+
+If you wish you could install the remote development extension for visual studio code which incorported four remote acting extensions.:
+
+* Dev Contaainers- to open a local folder into a container.
+* WSL - to open any folder in the windows subsystem for linux.
+* Remote SSH - to open a folder on a remote machine using secure shell
+* Remote Tunnels to open a folder on a remote machine using a vscode tunnel.
+
+That would proovide the full suite of remote development tools.
+
