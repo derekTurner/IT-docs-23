@@ -376,5 +376,7 @@ If you wish you could install the remote development extension for visual studio
 * Remote SSH - to open a folder on a remote machine using secure shell
 * Remote Tunnels to open a folder on a remote machine using a vscode tunnel.
 
-That would proovide the full suite of remote development tools.
+![remote development containers](remoteDev.png)
+
+That would provide the full suite of remote development tools.
 

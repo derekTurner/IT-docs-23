@@ -15,6 +15,8 @@ The react-dom  provides a method of writing into a dynamic document object model
 
 ## React without a production environment
 
+This is only a way to have a first try and is not a reccommended way to develop for production.
+
 As a starting point for basic try out all that is needed within HTML to embed a react application into it are the links to the javascript libraries.
 
 
@@ -30,7 +32,7 @@ These javasript libraries are drawn from a Content Delivery Network namned [unpk
 
 This provides a rapid download of packages which are held on the node package manager (NPM) site.
 
-Following the link https://unpkg.com/react@18/umd/react.development.js in a browser reveals the react javascript code from the latest version of the library.  In this case version 8.2.0
+Following the link https://unpkg.com/react@18/umd/react.development.js in a browser reveals the react javascript code from the latest version of the library to be supported in this way.  In this case version 18.2.0.
 
 ```javascript
 /**
@@ -160,7 +162,7 @@ Then I can right click on the html file in Visual Studio Code and select Open Wi
 
 React is often set to render into an HTML `<div>` element, but it is able to render into any HTML block element.  More generally any element capable of having inner HTML.  In this example I have added HTML5 `<header>`, `<main>` and `<footer>` elements rather than a `<div>`.
 
-HTML5 Elements such as `<div>` and '<span>` are non-semantic as they do not reflect the nature of the content. HTML5 also has a range of [semantic elements](https://www.w3schools.com/html/html5_semantic_elements.asp) which include 
+HTML5 Elements such as `<div>` and `<span>` are non-semantic as they do not reflect the nature of the content. HTML5 also has a range of [semantic elements](https://www.w3schools.com/html/html5_semantic_elements.asp) which include 
 
 `<article>`, `<aside>`, `<details>`, `<figcaption>`, `<figure>`, `<footer>`, `<header>`, `<main>`, `<mark>`, `<nav>`, `<section>`, `<summary>`, and `<time>`.
 
@@ -222,5 +224,5 @@ This shows that react is building on the HTML javascript css foundations with wh
 
 ## References
 
-The react website has a [getting started](https://reactjs.org/docs/getting-started.html) section. Use this with care because it may not have been fully updated to reflect the incoming changes with React version 18. 
+The react website has a [getting started](https://react.dev/learn) section. This is the current learning reference which you can use to do some personal study.
 
