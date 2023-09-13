@@ -207,7 +207,7 @@ These alternatives can be removed into sepatae functions greeting and parting Th
 The ternery expression which represents conditional execution is then simplified.
 
 ```javascript
-{hello ? greeting() : parting() }
+{greet ? greeting() : parting() }
 ```
 The code listing is then slightly shorter and easier to follow.
 

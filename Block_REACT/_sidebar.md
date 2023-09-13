@@ -6,6 +6,7 @@
 * [Introducing React](Block_REACT/section_1/react_intro.md)
 * [React Components](Block_REACT/section_2/components.md)
 * [Maintaining State](Block_REACT/section_3/maintainingState.md)
+* [Challenge solution](Block_REACT/section_3/maintainingStateChallengeFunction.md)
 
 <!--
 * [Maintaining State solution](Block_REACT/section_3/maintainingStateChallenge.md)
