@@ -7,6 +7,7 @@
 * [React Components](Block_REACT/section_2/components.md)
 * [Maintaining State](Block_REACT/section_3/maintainingState.md)
 * [Challenge solution](Block_REACT/section_3/maintainingStateChallengeFunction.md)
+* [Class components](Block_REACT/section_4/classComponents.md)
 
 <!--
 * [Maintaining State solution](Block_REACT/section_3/maintainingStateChallenge.md)
