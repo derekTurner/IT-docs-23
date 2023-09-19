@@ -63,6 +63,21 @@ Working files **ccomponents3.html** and **ccomponents3.js**
 
 The class can be invoked in different renderers to write different messages to three distinct containers.
 
+Edit ccomponents3.html so that it has header, main and footer sections with uniquie id's.
+
+**ccomponents3.html**
+```html
+  <body>
+    <h2>Passing props to a class component</h2>
+    <header id="header"></header>
+    <main   id="main"></main>
+    <footer id="footer"></footer>
+  </body>
+
+```
+Now create an instance of Message to display in each of these elements.
+
+**ccomponents3.js**
 ```javaScript
 const header   = ReactDOM.createRoot(document.getElementById("header"));
 const main     = ReactDOM.createRoot(document.getElementById("main"));
@@ -83,7 +98,7 @@ This shows the effect of different prop values being passed to a single class.
 
 This renders as:
 
-![components3](images/components3.png)
+![components3](images/ccomponents3.png)
 
 
 ## Maintaining State
@@ -146,6 +161,7 @@ The message returned by the class render function is set by:
 ```
 As a reminder the full listing of classState1.js is:
 
+**classState1.js**
 ```javascript
 const header   = ReactDOM.createRoot(document.getElementById("header"));
 const main     = ReactDOM.createRoot(document.getElementById("main"));
@@ -184,9 +200,9 @@ footer.render(<Message reader="Thanks"                 author="yours truely"/>);
 ```
 Which renders as:
 
-![class state all off](classState1a.png)
+![class state all off](images/classState1a.png)
 
 Each button controls the state of a class instance independently so that when the button on the main section is clicked only this line changes.
 
-![class state all off](classState1b.png)
+![class state all off](images/classState1b.png)
 

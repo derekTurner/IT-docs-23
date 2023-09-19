@@ -1,11 +1,9 @@
-## Challenge solution
+## Class Challenge solution
 
 >The challenge is to write code which will cycle around 5 different greeting messages each time a button is clicked.
 
 
 The solution can be extended so that each of the buttons controlling messages in the header, main and footer elements displays a different collection of messages.
-
-## class component solution
 
 Working through the class based solutions.  
 
@@ -83,14 +81,18 @@ class Message extends React.Component {
 
 header.render(<Message reader="Message to our readers" author="yours truely"/>);  
 main.render(  <Message reader="dear reader"            author="welcome to main event"/>);
-footer.render(<Message reader="Thanks"  
+footer.render(<Message reader="Thanks"                 author="yours truely"/>);
 ```
+
+This will render as the buttons are clicked:
+
+![class challenge1](images/classChallenge1.png)
 
 ### Array based class solution
 
 Either by refactoring the code above or as a first approach a solution based on messages held in arrays can be developed.
 
-Start by defining an epty array of undefined length then push the JSX message lines into the array.  In this way you could increase the number of messages beyond 5 without having to alter the declared array size.  All you would do would be to add extra push statements and alter the range of the counter.
+Start by defining an empty array of undefined length then push the JSX message lines into the array.  In this way you could increase the number of messages beyond 5 without having to alter the declared array size.  All you would do would be to add extra push statements and alter the range of the counter.
 
 ```javascript
       this.messages1 = [];
@@ -149,6 +151,10 @@ header.render(<Message reader="Message to our readers" author="yours truely"/>);
 main.render(  <Message reader="dear reader"            author="welcome to main event"/>);
 footer.render(<Message reader="Thanks"                 author="yours truely"/>);
 ```
+
+The refactored code renders the same result as before:
+
+![array solution](images/classChallenge2.png)
 
 ### multiple array based class solution
 
@@ -316,6 +322,9 @@ main.render(  <Message select= {messages2} reader="dear reader"            autho
 footer.render(<Message select= {messages3} reader="Thanks"                 author="yours truely"/>);
 ```
 
+Now each button renders a different sequence of five messages.
+
+![independent messages](images/classChallenge3.png)
 
 References\:
 

@@ -6,8 +6,10 @@
 * [Introducing React](Block_REACT/section_1/react_intro.md)
 * [React Components](Block_REACT/section_2/components.md)
 * [Maintaining State](Block_REACT/section_3/maintainingState.md)
-* [Challenge solution](Block_REACT/section_3/maintainingStateChallengeFunction.md)
+* [Challenge solution 1](Block_REACT/section_3/maintainingStateChallengeFunction.md)
 * [Class components](Block_REACT/section_4/classComponents.md)
+* [Challenge solution 2](Block_REACT/section_4/maintainingStateChallengeClass.md)
+* [React/Vite/Docker](Block_REACT/section_5/reactDevelopment1.md)
 
 <!--
 * [Maintaining State solution](Block_REACT/section_3/maintainingStateChallenge.md)
