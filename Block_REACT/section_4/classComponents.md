@@ -2,10 +2,11 @@
 
 Remeber that these should not be used for new designs.
 
-Create working files **components1.html** and **components1.js**
+Create working files **ccomponents1.html** and **ccomponents1.js**
 
 A class component is a class which features a render method which returns the user interface typically expressed in JSX.
 
+**cccomponents1.js**
 ```javaScript
 const main   = ReactDOM.createRoot(document.getElementById("main"));
 
@@ -21,11 +22,12 @@ In this example the class is referenced by the `<Message />` element and this is
 
 This is displayed as:
 
-![components1](images/components1.png)
+![components1](images/ccomponents1.png)
+
 
 ### Class Component Props
 
-Working files **components2.html** and **components2.js**
+Working files **ccomponents2.html** and **ccomponents2.js**
 
 Class components are able to respond to props to modify the rendered JSX.  
 
@@ -35,6 +37,7 @@ In calling the component the `<Classname>` is estended by adding attributes as n
 
 In this example the props named reader and author are passed.
 
+**ccomponents2.js**
 ```javaScript
 const main   = ReactDOM.createRoot(document.getElementById("main"));
 
@@ -51,15 +54,30 @@ The prop values are passed to the class when it is invoked within the root.rende
 
 This renders as:
 
-![components2](images/components2.png)
+![components2](images/ccomponents2.png)
 
 
 ### Class components props and containers
 
-Working files **components3.html** and **components3.js**
+Working files **ccomponents3.html** and **ccomponents3.js**
 
 The class can be invoked in different renderers to write different messages to three distinct containers.
 
+Edit ccomponents3.html so that it has header, main and footer sections with uniquie id's.
+
+**ccomponents3.html**
+```html
+  <body>
+    <h2>Passing props to a class component</h2>
+    <header id="header"></header>
+    <main   id="main"></main>
+    <footer id="footer"></footer>
+  </body>
+
+```
+Now create an instance of Message to display in each of these elements.
+
+**ccomponents3.js**
 ```javaScript
 const header   = ReactDOM.createRoot(document.getElementById("header"));
 const main     = ReactDOM.createRoot(document.getElementById("main"));
@@ -80,7 +98,7 @@ This shows the effect of different prop values being passed to a single class.
 
 This renders as:
 
-![components3](images/components3.png)
+![components3](images/ccomponents3.png)
 
 
 ## Maintaining State
@@ -116,7 +134,7 @@ The click event handler function is then defined.  A function *setState()* is us
 
 ```javascript
 handleClick() {
-        this.setState(state => ({hello: !state.hello}));
+        this.setState(state => ({greet: !state.greet}));
     }  
 ```
 In the render method of the component a button is added which will call the handleClick function when it is clicked.
@@ -129,13 +147,13 @@ The renderer in the class then writes a message based on the state.  In this cas
 Depending on the state *hello* the message printed on a button can be controlled by
 
 ```javascript
-{this.state.hello ? "On": "Off"}
+{this.state.greet ? "On": "Off"}
 ```
 
 The message returned by the class render function is set by:
 
 ```javascript
- {this.state.hello ? 
+ {this.state.greet ? 
     <h1>Hello {this.props.reader} from {this.props.author}!</h1>
     : 
     <h1>Goodbye {this.props.reader} from {this.props.author}!</h1>
@@ -143,6 +161,7 @@ The message returned by the class render function is set by:
 ```
 As a reminder the full listing of classState1.js is:
 
+**classState1.js**
 ```javascript
 const header   = ReactDOM.createRoot(document.getElementById("header"));
 const main     = ReactDOM.createRoot(document.getElementById("main"));
@@ -151,21 +170,21 @@ const footer   = ReactDOM.createRoot(document.getElementById("footer"));
 class Message extends React.Component {
   constructor(props) {
       super(props);
-      this.state = { hello: true };
+      this.state = { greet: true };
       this.handleClick = this.handleClick.bind(this);
     }
    
   handleClick() {
-      this.setState(state => ({hello: !state.hello}));
+      this.setState(state => ({greet: !state.greet}));
   }  
 
   render() {
       return(
       <span>   
       <button onClick={this.handleClick}>
-           {this.state.hello ?  "On" : "Off" }
+           {this.state.greet ?  "On" : "Off" }
       </button>
-      {this.state.hello ? 
+      {this.state.greet ? 
               <h1>Hello {this.props.reader} from {this.props.author}!</h1>
               : 
               <h1>Goodbye {this.props.reader} from {this.props.author}!</h1>
@@ -181,9 +200,9 @@ footer.render(<Message reader="Thanks"                 author="yours truely"/>);
 ```
 Which renders as:
 
-![class state all off](classState1a.png)
+![class state all off](images/classState1a.png)
 
 Each button controls the state of a class instance independently so that when the button on the main section is clicked only this line changes.
 
-![class state all off](classState1b.png)
+![class state all off](images/classState1b.png)
 
