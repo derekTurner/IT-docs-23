@@ -125,8 +125,8 @@ By creating a type the property types of the Square can be summarised and then S
 import React,  { MouseEvent } from 'react';
 
 type SquareProps = {
-    value : string;
-    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    value : Int8Array;
+    onClick: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Square = ({ value, onClick }:SquareProps) => {
@@ -153,26 +153,28 @@ import React from 'react';
 import Square from './Square';
 
 interface BoardProps {
-	onClick: (dummy:string) => void;
+    squares: Array<Int8Array>,
+	onClick: (i:number) => void;
 }
 
-const Board = ({ onClick }:BoardProps) => {
+const Board = ({ squares, onClick }:BoardProps) => {
     return(
-    <div>
-        <Square value="1" onClick={() => onClick("dummy value")} />
-        <Square value="2" onClick={() => onClick("dummy value")} />
-        <Square value="3" onClick={() => onClick("dummy value")} />
-        <Square value="4" onClick={() => onClick("dummy value")} />
-        <Square value="5" onClick={() => onClick("dummy value")} />
-        <Square value="6" onClick={() => onClick("dummy value")} />
-        <Square value="7" onClick={() => onClick("dummy value")} />
-        <Square value="8" onClick={() => onClick("dummy value")} />
-        <Square value="9" onClick={() => onClick("dummy value")} />
-    </div>
+    <GridDiv>
+        <Square value ={squares[0]} onClick={() => onClick(0)} />
+        <Square value ={squares[1]} onClick={() => onClick(1)} />
+        <Square value ={squares[2]} onClick={() => onClick(2)} />
+        <Square value ={squares[3]} onClick={() => onClick(3)} />
+        <Square value ={squares[4]} onClick={() => onClick(4)} />
+        <Square value ={squares[5]} onClick={() => onClick(5)} />
+        <Square value ={squares[6]} onClick={() => onClick(6)} />
+        <Square value ={squares[7]} onClick={() => onClick(7)} />
+        <Square value ={squares[8]} onClick={() => onClick(8)} />
+    </GridDiv>
     )
 }
 
 export default Board;
+
 ```
 
 ### Game
@@ -252,18 +254,22 @@ import React,  { MouseEvent } from 'react';
 import styled from "styled-components";
 
 type SquareProps = {
-    value : string;
+    value : Int8Array;
     onClick: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 const MyButton = styled.button`
 background: lightblue;
 border: 2px solid darkblue;
-font-size: 30px;
+font-size:25px;
 font-weight: 800;
 cursor: pointer;
-outline: none;
+outline-style: solid;
+outline-width: thin;
+outline-color:  #92a8d1;
+/*margin: 1px;*/
 `;
+
 
 
 const Square = ({ value, onClick }:SquareProps) => {
@@ -296,8 +302,8 @@ const GridDiv = styled.div`
 background-color:#92a8d1;
 border: 4px solid darkblue;
 borderRadius: 10px;
-width: 250px;
-height:"250px;
+width:  250px;
+height: 250px;
 margin: 0 auto;
 display: grid;
 grid-template: repeat(3, 1fr) / repeat(3, 1fr);
@@ -309,23 +315,24 @@ interface BoardProps {
 	onClick: (i:number) => void;
 }
 
-const Board = ({ onClick }:BoardProps) => {
+const Board = ({ squares, onClick }:BoardProps) => {
     return(
     <GridDiv>
-        <Square value="1" onClick={() => onClick(1)} />
-        <Square value="2" onClick={() => onClick(2)} />
-        <Square value="3" onClick={() => onClick(3)} />
-        <Square value="4" onClick={() => onClick(4)} />
-        <Square value="5" onClick={() => onClick(5)} />
-        <Square value="6" onClick={() => onClick(6)} />
-        <Square value="7" onClick={() => onClick(7)} />
-        <Square value="8" onClick={() => onClick(8)} />
-        <Square value="9" onClick={() => onClick(9)} />
+        <Square value ={squares[0]} onClick={() => onClick(0)} />
+        <Square value ={squares[1]} onClick={() => onClick(1)} />
+        <Square value ={squares[2]} onClick={() => onClick(2)} />
+        <Square value ={squares[3]} onClick={() => onClick(3)} />
+        <Square value ={squares[4]} onClick={() => onClick(4)} />
+        <Square value ={squares[5]} onClick={() => onClick(5)} />
+        <Square value ={squares[6]} onClick={() => onClick(6)} />
+        <Square value ={squares[7]} onClick={() => onClick(7)} />
+        <Square value ={squares[8]} onClick={() => onClick(8)} />
     </GridDiv>
     )
 }
 
 export default Board;
+
 ```
 
 ![styled board](images/styledBoard.png)
@@ -382,6 +389,7 @@ const GameState = styled.div`
 	margin: 20px auto;
 `;
 
+
 const  Game = () => {
 	const [history, setHistory] = useState([Array(9).fill(null)]);
 	const [stepNumber, setStepNumber] = useState(0);
@@ -436,81 +444,6 @@ export default Game;
 
 The return function uses [<Fragment> ](https://react.dev/reference/react/Fragment) to allow elements to be grouped without a wrapper node.
 
-Then working up the chain:
+The game can now be played with history.
 
-**Board.tsx**
-```javascript
-import React from 'react';
-import Square from './Square';
-import styled from "styled-components";
-
-
-const GridDiv = styled.div`
-background-color:red,
-border: 4px solid darkblue,
-borderRadius: 10px,
-width: 250px,
-height:"250px,
-margin: 0 auto,
-display: grid,
-gridTemplate: repeat(3, 1fr) / repeat(3, 1fr)
-`;
-
-
-interface BoardProps {
-    squares: Array<Int8Array>,
-	onClick: (i:number) => void;
-}
-
-const Board = ({ onClick }:BoardProps) => {
-    return(
-    <GridDiv>
-        <Square value="1" onClick={() => onClick(1)} />
-        <Square value="2" onClick={() => onClick(2)} />
-        <Square value="3" onClick={() => onClick(3)} />
-        <Square value="4" onClick={() => onClick(4)} />
-        <Square value="5" onClick={() => onClick(5)} />
-        <Square value="6" onClick={() => onClick(6)} />
-        <Square value="7" onClick={() => onClick(7)} />
-        <Square value="8" onClick={() => onClick(8)} />
-        <Square value="9" onClick={() => onClick(9)} />
-    </GridDiv>
-    )
-}
-
-export default Board;
-
-```
-
-And Finally **Square.tsx**
-
-```javascript
-import React,  { MouseEvent } from 'react';
-import styled from "styled-components";
-
-type SquareProps = {
-    value : string;
-    onClick: (event: MouseEvent<HTMLButtonElement>) => void;
-}
-
-const MyButton = styled.button`
-background: lightblue;
-border: 2px solid darkblue;
-font-size: 30px;
-font-weight: 800;
-cursor: pointer;
-outline: none;
-`;
-
-
-
-const Square = ({ value, onClick }:SquareProps) => {
-    return(
-    <MyButton  onClick={onClick}>
-        {value}
-    </MyButton>
-    )
-}
-
-export default Square;
-```
+![Game play](images/play.png)
