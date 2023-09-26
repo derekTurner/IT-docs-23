@@ -2,7 +2,7 @@
 
 Now a simple react Noughts and crosses game can be created.
 
-This follows a [basic tutorial](https://react.dev/learn/tutorial-tic-tac-toe) on the React website and refers to the version by #[thomasJonStrup](https://github.com/thomasjonstrup/react-tic-tac-toe/tree/master)
+This follows a [basic tutorial](https://react.dev/learn/tutorial-tic-tac-toe) on the React website and refers to the version by [thomasJonStrup](https://github.com/thomasjonstrup/react-tic-tac-toe/tree/master)
 
 
 
@@ -209,40 +209,34 @@ The app should now be viewable, but does nothing yet.
 
 ### Style on squares
 
-Styled components will be used to add style to the button.
+[Styled components](https://styled-components.com/) will be used to add style to the button.
 
 Before using, stop the development server and check that styled-components are included in your node environment.
 
 Open the root folder of the container react23 in a clean integrated terminal.
 
+I initially installed an older version of stylised components and this is indicated as deprecated.
 
 > $ npm install --save-dev @types/styled-components
 
-This is indicated as depracated, but is commonly used in tutorials.
+Advice in the stylised components [FAQ section] advises the following steps to update the necessary packages to their latest versions.
 
-```code
-node ➜ /workspaces/reactTS23/react23 (main) $ npm install --save-dev @types/styled-components
+From within the react23 folder:
 
-added 4 packages, and audited 358 packages in 8s
+> npm install styled-components@^6.0.0 stylis@^4.0.0
 
-47 packages are looking for funding
-  run `npm fund` for details
-```
+> npm uninstall @types/styled-components
+
+
 The dev dependancies in package json are updated.
 ```json
- "devDependencies": {
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
-    "@types/styled-components": "^5.1.28",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "@vitejs/plugin-react": "^4.0.3",
-    "eslint": "^8.45.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
-  }
+   "dependencies": {
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.8.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^6.0.0",
+    "stylis": "^4.0.0"
+  },
 ```
 
 
@@ -288,44 +282,54 @@ export default Square;
 
 ### Style on Board
 
-The style for the board can use the same const name as the code is encapsulated in a module.
+The style for the board can also be set using a styled component, this time a styled div.
 
-The [css gridTemplate](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template) takes care of presenting the squares on three rows.
+The [css gridTemplate](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template) takes care of presenting the [1 fr unit squares on three rows](https://www.digitalocean.com/community/tutorials/css-css-grid-layout-fr-unit).
 
 ```javascript
 import React from 'react';
 import Square from './Square';
+import styled from "styled-components";
 
-const style = {
-	border: "4px solid darkblue",
-	borderRadius: "10px",
-	width: "250px",
-	height: "250px",
-	margin: "0 auto",
-	display: "grid",
-	gridTemplate: "repeat(3, 1fr) / repeat(3, 1fr)",
-};
 
-const Board = ({ squares, onclick }) => (
-    <div style={style}>
-        <Square value="1" onClick={() => onClick("dummy value")} />
-        <Square value="2" onClick={() => onClick("dummy value")} />
-        <Square value="3" onClick={() => onClick("dummy value")} />
-        <Square value="4" onClick={() => onClick("dummy value")} />
-        <Square value="5" onClick={() => onClick("dummy value")} />
-        <Square value="6" onClick={() => onClick("dummy value")} />
-        <Square value="7" onClick={() => onClick("dummy value")} />
-        <Square value="8" onClick={() => onClick("dummy value")} />
-        <Square value="9" onClick={() => onClick("dummy value")} />
-    </div>
-)
+const GridDiv = styled.div`
+background-color:#92a8d1;
+border: 4px solid darkblue;
+borderRadius: 10px;
+width: 250px;
+height:"250px;
+margin: 0 auto;
+display: grid;
+grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+`;
+
+
+interface BoardProps {
+    squares: Array<Int8Array>,
+	onClick: (i:number) => void;
+}
+
+const Board = ({ onClick }:BoardProps) => {
+    return(
+    <GridDiv>
+        <Square value="1" onClick={() => onClick(1)} />
+        <Square value="2" onClick={() => onClick(2)} />
+        <Square value="3" onClick={() => onClick(3)} />
+        <Square value="4" onClick={() => onClick(4)} />
+        <Square value="5" onClick={() => onClick(5)} />
+        <Square value="6" onClick={() => onClick(6)} />
+        <Square value="7" onClick={() => onClick(7)} />
+        <Square value="8" onClick={() => onClick(8)} />
+        <Square value="9" onClick={() => onClick(9)} />
+    </GridDiv>
+    )
+}
 
 export default Board;
 ```
 
-![styled board](styledBoard.png)
+![styled board](images/styledBoard.png)
 
-NOTE code style not working here!
 
 ### Calculate Winner
 
@@ -338,7 +342,7 @@ Each of these sequences needs to be tested in turn for the criterion of winning 
 
 Null represents false so if(squares[a]) tests if the array is non-null.
 
-**helpers.js**
+**helpers.ts**
 ```javascript
 export function calculateWinner(squares: Array<Int8Array>){
     const lines = [
