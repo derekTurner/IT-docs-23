@@ -218,6 +218,12 @@ interface User {
 
 The function List() will be used to collect and display the data.  UseState() is used to set up a constant which is an array of User[] data sets.  The const error is used to store error messeages which we hope not to see!
 
+```javascript
+function List() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState('');
+```
+
 useEffect is a hook which enables an app to synchronise with external data.  The [syntax](https://react.dev/reference/react/useEffect#useeffect) is:
 
 ```javascript
