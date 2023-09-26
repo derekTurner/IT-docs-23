@@ -10,7 +10,8 @@
 * [Class components](Block_REACT/section_4/classComponents.md)
 * [Challenge solution 2](Block_REACT/section_4/maintainingStateChallengeClass.md)
 * [React/Vite/Docker](Block_REACT/section_5/reactDevelopment1.md)
-
+* [Tic-Tac-Toe](Block_REACT/section_6/tictactoe.md)
+* [Consume API](Block_REACT/section_7/consumejsonapi.md)
 <!--
 * [Maintaining State solution](Block_REACT/section_3/maintainingStateChallenge.md)
 * [React with docker](Block_REACT/section_4/reactDevelopment1.md)
