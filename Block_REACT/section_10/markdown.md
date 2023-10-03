@@ -312,3 +312,10 @@ Descriptive text here
 
 Try to create a github page based on a topic in internet technologies including presentation slides with additional text details and elements of a tutorial with code extracts.
 
+### React Markdown
+
+React has a component which can render markdown.  
+
+Retool have a tutorial for [react markdown](https://retool.com/blog/react-markdown-component-the-easy-way-to-create-rich-text/)
+
+A longer read with more detail is at [copy cat](https://www.copycat.dev/blog/react-markdown/).

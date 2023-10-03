@@ -12,16 +12,14 @@
 * [React/Vite/Docker](Block_REACT/section_5/reactDevelopment1.md)
 * [Tic-Tac-Toe](Block_REACT/section_6/tictactoe.md)
 * [Consume API](Block_REACT/section_7/consumejsonapi.md)
-<!--
-* [Maintaining State solution](Block_REACT/section_3/maintainingStateChallenge.md)
-* [React with docker](Block_REACT/section_4/reactDevelopment1.md)
-* [Tic  Tac Toe](Block_REACT/section_5/tictactoe.md)
-
-* [Consume a JSON API](Block_REACT/section_6/consumejsonapi.md)
-
-* [Function consumes a JSON API](Block_REACT/section_7/consumejsonfunc.md)
-
 * [Reactnative consumes JSON API](Block_REACT/section_8/reactNative.md)
+
+* [Build ReactNative on docker](Block_REACT/section_9/ReactNativedocker.md)
+* [Markdown](Block_REACT/section_10/markdown.md)
+<!--
+
+
+
 
 * [Build ReactNative on docker](Block_REACT/section_9/ReactNativedocker.md)
 * [Sample Database](Block_REACT/section_REACT0/section_REACT0.md)
