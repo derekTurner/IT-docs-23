@@ -227,7 +227,7 @@ const useAxios = (axiosParams: AxiosRequestConfig) => {
       const result = await axios.request(params);
       setResponse(result);
     } catch( err ) {
-      setError(err);
+      setError(err as AxiosError);
     } finally {
       setLoading(false);
     }
@@ -235,7 +235,7 @@ const useAxios = (axiosParams: AxiosRequestConfig) => {
 
 useEffect(() => {
   fetchData(axiosParams);
-},[]);
+},[axiosParams]);
 
  return { response, error, loading };
 }
@@ -257,18 +257,16 @@ function App() {
 
 interface Company{
   name:string
-  catchphrase:string;
+  catchPhrase:string;
   bs:string;
 }
 
 interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
   company:Company;
 }
-
-
 
   const { response, loading, error } = useAxios({
     method: "GET",
@@ -283,18 +281,23 @@ interface User {
     <View style={styles.container}>
       <Text style={styles.card} >Contact List</Text>
       {loading && (
-        <p>Loading...</p>
+        <Text>Loading...</Text>
       )}
       {error && (
-        <p>{error.message}</p>
+        <Text>{error.message}</Text>
       )}
       {loading ? <ActivityIndicator/> : (
           
-      <FlatList 
-            data={myData}
-            keyExtractor={({ id }, index) => id}
-            renderItem={({ item }) => (
-              <Text style={styles.card}>{item.name}, {item.email}, {item.company.name},{item.company.bs}</Text>
+      <FlatList
+            data = {myData}
+            keyExtractor = {({ id }, index) => id}
+            renderItem = {({ item }:{item:User}) => (
+              <Text style={styles.card}>{item.name}{'\n'} 
+                                        {item.email}{'\n'}  
+                                        {item.company.name}{'\n'} 
+                                        {item.company.catchPhrase}{'\n'} 
+                                        {item.company.bs}
+              </Text>
             )}
           />
         )}
@@ -321,6 +324,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
 ```
 
 
