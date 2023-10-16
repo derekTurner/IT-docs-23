@@ -16,6 +16,8 @@
 
 * [Build ReactNative on docker](Block_REACT/section_9/ReactNativedocker.md)
 * [Markdown](Block_REACT/section_10/markdown.md)
+* [Svelte Presentation](Block_REACT/section_11/SveltePresentation.md)
+* [Svelte Tutorial](Block_REACT/section_12/SvelteTutorial.md)
 <!--
 
 
