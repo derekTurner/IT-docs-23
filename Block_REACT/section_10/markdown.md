@@ -289,23 +289,23 @@ It is relatively easy to include powerpoint slide images in a markdown presentat
 Then include the images
 
 <pre>
-![Slide1](Slide1.png)
+![Slide1](Slide1.PNG)
 Descriptive text here
 
-![Slide2](Slide2.png)
+![Slide2](Slide2.PNG)
 Descriptive text here
 
-![Slide33](Slide3.png)
+![Slide33](Slide3.PNG)
 Descriptive text here
 </pre>
 
-![Slide1](Slide1.png)
+![Slide1](Slide1.PNG)
 Descriptive text here
 
-![Slide2](Slide2.png)
+![Slide2](Slide2.PNG)
 Descriptive text here
 
-![Slide33](Slide3.png)
+![Slide33](Slide3.PNG)
 Descriptive text here
 
 ### Github page
