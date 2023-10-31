@@ -2,11 +2,15 @@
 
 This section continues our working towards a server side application combining, node, express and mongoDb.
 
-In previous sections we have developed a react application from scratch to show how it works and have then gon on to use a generator programme "create-react-app" to create a full application template ready for use.  In the same way, having made an initial express app to say hello world we want to use the express generator to set up a template application with a folder structure ready for use.
+In previous sections we have developed a react application from scratch to show how it works and have then gone on to use a vite to create a full application template ready for use.  
+
+In a similar way, having made an initial express app to say hello world we want to use the express generator to set up a template application with a folder structure ready for use.
 
 ## Duplicate repository
 
 The starting point for this is the express 1 code so I will copy this into a new repository named express--2 using the instructions at on [gitHub docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository). 
+
+This will leave a working version of files on github.  If you prefer you might create a new github branch rather than a separate repository.  
 
 This will create a local copy of the express1 repository which is deleted at the end.  I found I had to delete this manually!
 
@@ -28,7 +32,7 @@ Then remove the local repository
 
 This last step did not work so I just removed the file using windows file inspector.
 
-Create dev environment
+## Create dev environment
 
 Working from the new repository create a new environment.
 
@@ -189,12 +193,12 @@ The updated version is listed in package.json in the new myapp folder.
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
-    "core-js": "^3.26.0",
+    "core-js": "^3.33.2",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "^4.18.2",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "pug": "2.0.0-beta11"
+    "pug": "^3.0.2"
   }
 }
 ```
@@ -324,12 +328,12 @@ Change the start script in the remote container to use nodemon and save this.
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
-    "core-js": "^3.26.0",
+    "core-js": "^3.33.2",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "^4.18.2",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "pug": "2.0.0-beta11"
+    "pug": "^3.0.2"
   }
 }
 ```
