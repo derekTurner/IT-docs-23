@@ -2,9 +2,9 @@
 
 In this section we are working towards a server side application combining, node, express and mongoDb, but first we start with a hello world from express.
 
-[Node](https://nodejs.org/en/) is described as "as an asynchronous event driven JavaScript runtime, Node is designed to build scalable network applications". In a browser javascript is to some degree sandboxed, but when it is running on Node it can draw on the many modules which Node provides and that includes networking capabilities. This example uses node version 17.
+[Node](https://nodejs.org/en/) is described as "as an asynchronous event driven JavaScript runtime, Node is designed to build scalable network applications". In a browser javascript is to some degree sandboxed, but when it is running on Node it can draw on the many modules which Node provides and that includes networking capabilities. This example uses node version 20.
 
-![node js](node18.png)
+![node js](node20.png)
 
 [ExpressJS](https://expressjs.com/) is a small web framework which sits on top of node.js
 
@@ -20,7 +20,7 @@ Express 4 is the current version  Express 5 is coming soon but code for express 
 
 # Running express in a docker development environment
 
-Now it is time to look at server side programming we will consider Express running in a node environment.
+Now it is time to look at server side programming we will consider Express running in a node environment. The environment will not be started from Visual studio code as I have done previously, but will use development containers linked to a github repositories.
 
 For this I will set up new github repository named express--1 and use this to create a new docker environment.  As I progress through the example I will make a series of github repositories to demonstrate progressive stages.
 
@@ -30,7 +30,7 @@ I need to make a new repository so will add a .gitnore file for node environment
 
 ![express 1repository](express--1.png)
 
-Create the file .docker/config.json
+Create the file .docker/config.json editing online via the github site.  Take care over the dot and make sure you have the correct folder structure.
 
 ```json
 {
@@ -65,9 +65,9 @@ To check that node is working enter into the terminal shell:
 
 ```code
 node --version
-v19.0.0
+v20.9.0
 ```
-A version up from previously.
+
 
 # install express 
 
@@ -238,9 +238,10 @@ Review the contents of package.json
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "nodemon": "^2.0.20"
+    "nodemon": "^3.0.1"
   }
 }
+
 ```
 This covers the applications installed in their recent versions.
 
@@ -250,7 +251,7 @@ Take  alook at psckage-lock.json.  This is a long file, so only and extract show
 {
   "name": "myapp",
   "version": "1.0.0",
-  "lockfileVersion": 2,
+  "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
@@ -259,7 +260,7 @@ Take  alook at psckage-lock.json.  This is a long file, so only and extract show
       "license": "ISC",
       "dependencies": {
         "express": "^4.18.2",
-        "nodemon": "^2.0.20"
+        "nodemon": "^3.0.1"
       }
     },
     "node_modules/abbrev": {
@@ -277,6 +278,18 @@ Take  alook at psckage-lock.json.  This is a long file, so only and extract show
       },
       "engines": {
         "node": ">= 0.6"
+      }
+    },
+    "node_modules/anymatch": {
+      "version": "3.1.3",
+      "resolved": "https://registry.npmjs.org/anymatch/-/anymatch-3.1.3.tgz",
+      "integrity": "sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==",
+      "dependencies": {
+        "normalize-path": "^3.0.0",
+        "picomatch": "^2.0.4"
+      },
+      "engines": {
+        "node": ">= 8"
       }
     },
 ```
@@ -352,7 +365,7 @@ To enable the application to run add a start script to package.json.
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "nodemon": "^2.0.20"
+    "nodemon": "^3.0.1"
   }
 }
 ```
@@ -366,13 +379,17 @@ To execute the start script
 > myapp@1.0.0 start
 > nodemon
 
-[nodemon] 2.0.20
+> myapp@1.0.0 start
+> nodemon app.js
+
+[nodemon] 3.0.1
 [nodemon] to restart at any time, enter `rs`
 [nodemon] watching path(s): *.*
-[nodemon] watching extensions: js,mjs,json
+[nodemon] watching extensions: js,mjs,cjs,json
 [nodemon] starting `node app.js`
 Running on http://0.0.0.0:8080
 ```
+
 
 Open the browser to port 8080 and see the hello world message.
 
@@ -427,7 +444,7 @@ To stop the app running use
 
 ```code
 ^C
-root@dc94c2ac1d4d:/com.docker.devenvironments.code/myapp# 
+node@9267fdc420a9:/com.docker.devenvironments.code/myapp$
 ```
 A simple example of express is running in a container.
 
@@ -439,4 +456,4 @@ A simple example of express is running in a container.
 
 [Bash scripting cheatsheet](https://devhints.io/bash)
 
-[nodemon inside docker container](https://stackoverflow.com/questions/48325920/nodemon-inside-docker-container)
+[Manage your node version](https://www.npmjs.com/package/n)

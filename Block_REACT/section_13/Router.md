@@ -270,7 +270,7 @@ Following navigation to the tutorial:
 
 ![Tutorial](images/tutorial.png)
 
-## github pages
+## building pages
 
 Close the development server 
 
@@ -308,54 +308,13 @@ Make sure that all editor files are closed and then
 
 >CTRL + SHIFT + P
 
+
 Reopen the container locally.
 
 ![local](images/local.png)
 
+Now copy the files into a local folder
 
-Make a new github repository named presentation with gitnore node.
+![local](images/localfolder.png)
 
-![new repo](../section_7/repo.png)
-
-Use github desktop to clone this to the local machine.
-
-![clone](images/clone.png)
-
-Copy the contents of the dist folder from the reactTS23 local folder to the presentation folder.
-
-![copied](images/copied.png)
-
-Open this folder in visual studio and check that the pages run on live server.
-
-Then use github desktop to commit changes and push to the remote origin.
-
-Back on github choose settings and then pages.
-
-![settings](images/settings.png)
-
-Choose the main branch as the source for your pages.
-
-![source](images/source.png)
-
-Then save.
-
-Navigate back on github to the presentation repository and note that the github pages are `queued`.
-
-Refresh the page and the deployment should get a green tick.
-
-![tick](images/tick.png)
-
-Click on this which is a link and you will see the deployment list.
-
-![deployment list](images/list.png)
-
-The arrow icon on the right opens this in the browser.
-
-You will see a blank site and ctl + i shows the reason why.   Loading an asset was blocked because of a disallowed MIME type (“text/html”).
-
-This is a browser security feature which needs to be fixed.
-
-Open index.html on the local machine in visual studio.
-
-
-
+Confirm that you can run these with the live server in visual studio code.  These files are all you need to run the app from an html server.
