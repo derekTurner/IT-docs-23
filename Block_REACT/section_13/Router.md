@@ -10,175 +10,194 @@ This app will use the [react router version 6](https://reactrouter.com/en/main) 
 
 > npm install react-router-dom
 
+> A utility which will be useful to allow bootstrap navigation to be used with the react-router-dom should also be installed.
+
+> npm install rect-router-bootstrap
+
 Now add markdown handling, just for this particular project.
 
 > cd react23
  
 > npm install react-markdown --save
 
+
+
 > ### Routing
 >
 > The addition of the react router enbles the app to move between views of multiple components.  One component will be for the display of the presentation file, and this willo be the home page.  The other component will be for the display of the tutorial.
->
-> In to App.tsx the router and components will need to be imported.  The router has different options and in this case the BrowserRouter will be used.
->
-  **App.tsx**
-```javascript
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Presentation from './components/Presentation';
-import Tutorial from './components/Tutorial';
-```
 
-Function App() should then display the selected component depending on the route selected.
+The routes for navigation will be separated into a component file components/Routes.tsx.  
 
-```javascript
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Presentation />} />
-        <Route path="/tutorial" element={<Tutorial />} />
-      </Routes>
-    </Router>
-  );
-}
+The createBrowserRouter and RouterProvider elements are imported from react-router-dom.
 
-export default App;
-```
+The pages which will be routed are the Presentation (containing slides and text on Svelte) and the tutorial (containing a brief how-to tutorial on Svelte).  A third page, NoMatch is there to be called if the user browses to an invalid link.
 
-In case a route is seleted which does not match one of the prescribed selections, an error message should be displayed.  A function can be added to App.tsx
+A navigation bar will be provided in components/Header.tsx
 
-```javascript
-function NoMatch() {
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>404: Page Not Found</h2>
-      <p>The page selected does not exist.</p>
-    </div>
-  );
-}
-```
 
-To test this out a route is added for any path which has not been caught by the defined routes "/" or "/tutorial".
-
-```javascript
-<Routes>
-        <Route path="/" element={<Presentation />} />
-        <Route path="/tutorial" element={<Tutorial />} />
-        <Route path="*" element={<NoMatch />} />
-      </Routes>
-```
-
-This would work if the user typed the url into the browser.  However it would be easier to manage by adding the simplest of navigation menus.  This uses the `<Link>` component of the Router.
-
-```javascript
-        <nav style={{ margin: 10 }}>
-          <Link to="/" style={{ padding: 5 }}>
-          Presentation
-          </Link>
-          <Link to="/tutorial" style={{ padding: 5 }}>
-          Tutorial
-          </Link>
-      </nav>
-```
-
-There is a small amount of style added here, but this could be improved by using [react bootstrap navigation bar](https://react-bootstrap.netlify.app/docs/components/navbar/).   
-
-Note that the routes are not hyperlinks to web addresses so you should not use the href attribute of the `<Nav.Link>` instead use this only for styling to enclose the router `<Link>`.
-
-Bootstrap is already in the development environment so does not need to be installed again.
-
-Import the required components.
-
-```javascript
-import Container from 'react-bootstrap/Container';
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-```
-
-Then use these in the router.
-
-```javascript
-      <Navbar expand="lg" className="bg-body-tertiary">
-        <Container>
-          <Navbar.Brand href="#home">Svelte Starter</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link>
-                <Link to="/" style={{ padding: 5 }}>
-                  Presentation
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
-                
-                <Link to="/tutorial" style={{ padding: 5 }}>
-                  Tutorial
-                </Link>
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-```
-
-The complete listing of **App.tsx** is then:
-
+**components/Routes.tsx**
 ```javascript
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Presentation from "./components/Presentation";
-import Tutorial from "./components/Tutorial";
-import Container from 'react-bootstrap/Container';
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import Presentation from "./Presentation";
+import Tutorial from "./Tutorial";
+import NoMatch from "./NoMatch";
+import Header from "./Header";
+```
+The routes are described by a path based on the url and the element to display.
 
-function NoMatch() {
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>404: Page Not Found</h2>
-      <p>The page selected does not exist.</p>
-    </div>
-  );
+On each of the routed paths the element includes the navigation element ``<Header />`` and the element to be displayed, for example ``<Presentation />``.  All JSX elements must be nested in a single outer element.  The simplest of these is a JSX fragment represented by ``<></>``.
+
+In this way the navigation will appear on every page rendered.
+
+```javascript
+function Routes() : React.JSX.Element {
+
+  const Routes =  createBrowserRouter([
+    {
+      path: "/",
+      element: (<><Header/><Presentation /></>),
+    },
+    {
+      path: "/tutorial",
+      element: (<><Header/><Tutorial /></>),
+    },
+    {
+      path: "*",
+      element: <NoMatch />,
+    },
+  ]);
+```
+A ``<RouterProvider>`` is returned by the Routes function. This includes all the routes described in the ``const Routes``.
+
+```javascript
+  return <RouterProvider router={Routes} />;  
 }
+export default Routes;
+```
+
+Putting this  together the full  listing is
+
+**components/Routes.tsx**
+``` javascript
+import React from "react";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import Presentation from "./Presentation";
+import Tutorial from "./Tutorial";
+import NoMatch from "./NoMatch";
+import Header from "./Header";
+
+function Routes() : React.JSX.Element {
+
+  const Routes =  createBrowserRouter([
+    {
+      path: "/",
+      element: (<><Header/><Presentation /></>),
+    },
+    {
+      path: "/tutorial",
+      element: (<><Header/><Tutorial /></>),
+    },
+    {
+      path: "*",
+      element: <NoMatch />,
+    },
+  ]);
+
+  return <RouterProvider router={Routes} />;  
+}
+export default Routes;
+```
+
+Now for the ``<Header>`` component.  Any elements required from react-bootstrap are imported together with the ``LinkContainer`` from react-bootsrap.
+
+**components/Header.tsx**
+```javascript
+import React from "react";
+import { Navbar, Nav } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+```
+The bootsrap navbar is made up following the usual pattern but wherever a ``<Nav.Link>`` would normally have included an ``href = `` this is omitted and the action of the navbar is drawn from the routes by nesting the ``<NavLink>`` inside a ``<LinkContainer>`` to the required path.  This will cause the navigation to be carried out client side without calls to the server.
+
+```javascript
+<LinkContainer to="/tutorial">
+  <Nav.Link>Tutorial</Nav.Link>
+</LinkContainer>
+```
+
+The full listing is then:
+**components/Header.tsx**
+```javascript
+import React from "react";
+import { Navbar, Nav } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+
+const Header = () => {
+  return (
+    <Navbar expand="lg" className="bg-body-tertiary">
+      <Navbar.Brand href="#home">Svelte Starter</Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="me-auto">
+          <LinkContainer to="/">
+            <Nav.Link>Presentation</Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/tutorial">
+            <Nav.Link>Tutorial</Nav.Link>
+          </LinkContainer>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
+  );
+};
+export default Header;
+```
+
+
+App.tsx then becomes very simple because all that is required at the moment is to render the routes to show all the pages and navigation.  The full listing is:
+
+  **App.tsx**
+```javascript
+import React from "react";
+import Routes from "./components/Routes";
 
 function App() {
   return (
-    <Router>
-      <Navbar expand="lg" className="bg-body-tertiary">
-        <Container>
-          <Navbar.Brand href="#home">Svelte Starter</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link>
-                <Link to="/" style={{ padding: 5 }}>
-                  Presentation
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
-                
-                <Link to="/tutorial" style={{ padding: 5 }}>
-                  Tutorial
-                </Link>
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
-      <Routes>
-        <Route path="/" element={<Presentation />} />
-        <Route path="/tutorial" element={<Tutorial />} />
-        <Route path="*" element={<NoMatch />} />
-      </Routes>
-    </Router>
+    <>
+      <Routes />
+    </>
   );
 }
 
 export default App;
 ```
+
+
+In case a route is seleted which does not match one of the prescribed selections, an error message should be displayed.  A component can be added as components/NoMatch.tsx
+
+This can be customise with whatever error message you want to give to the client who browses to an invalid url.
+
+**components/NoMatch.tsx**
+```javascript
+import React from "react";
+
+function NoMatch() : React.JSX.Element {
+    return (
+      <div style={{ padding: 20 }}>
+        <h2>404: Page Not Found</h2>
+        <p>The page selected does not exist.</p>
+      </div>
+    );
+  }
+  export default NoMatch
+```
+
 
 ### Displaying markdown.
 
