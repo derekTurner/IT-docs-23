@@ -18,6 +18,8 @@
 * [Markdown](Block_REACT/section_10/markdown.md)
 * [Svelte Presentation](Block_REACT/section_11/SveltePresentation.md)
 * [Svelte Tutorial](Block_REACT/section_12/SvelteTutorial.md)
+* [React Markdown](Block_REACT/section_13/Router.md)
+* [Github pages](Block_REACT/section_14/githubpages.md)
 <!--
 
 
