@@ -23,7 +23,7 @@ The starting point for this is the express 1 code so I will copy this into a new
 
 This will create a local copy of the express1 repository which is deleted at the end.  I found I had to delete this manually!
 
-Start by creating a new public github repository express--3 with a not .gitignore file.
+Start by creating a new public github repository express--3 with a node .gitignore file.
 
 Create the local bare clone copy working in powershell;
 
@@ -43,7 +43,7 @@ Manually remove the local copy of express--2.git which is probably in your users
 
 Now use docker desktop to create a new environment from the express--3 repository.
 
-![Express 3 environment](create3.png)
+![Express 3 environment](images/create3.png)
 
 The environment names will change each time they are created, but the repository name will always be the first item.  As you follow the notes you should substitute your own environment names.
 
@@ -68,16 +68,27 @@ The node modules listed in package.json have not yet been loaded into the enviro
 
 If you need to you can obtain root access a bash shell can be opened in the container using a docker command issued in a separate terminal  (either in a separate VSC terminal window or in the powershell app) I like powershell for this as it gives a sense of separation of tasks:
 
->  docker exec -u 0 -it flamboyant_perlman bash
+>  docker exec -u 0 -it express--3-youthful_driscoll-app-1 bash
 
 ```code
 root@b846c088532a:/#
 ```
-With Docker desktop 4.13.0 there is a new integrated terminal feature which accesses the root user without the need for a third party terminal.
+With Docker desktop 4.22.1 there is an new integrated terminal feature which accesses the root user without the need for a third party terminal.
 
-![terminal](terminal.png)
+Go to the containers tab and click on the currently running container to switch to a container view. 
+
+![container view](images/containerview.png)
+
+Under the drop down menu select openin terminal.
+
+
+![terminal](images/terminal.png)
+
+I still prefer powershell as the previous commands can be easily accesseb by up arrow.
 
 Either way, as root user:
+
+> npm install
 
 > cd com.docker.devenvironments.code
 
@@ -88,112 +99,37 @@ Either way, as root user:
 Take note of these steps as they will recur each time a new node environment is generated.
 
 ```code
-npm WARN deprecated core-js@2.6.12: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+added 167 packages, and audited 168 packages in 21s
 
-added 157 packages, and audited 158 packages in 6s
-
-12 packages are looking for funding
-  run `npm fund` for details
-
-4 vulnerabilities (2 low, 2 high)
-
-To address issues that do not require attention, run:
-  npm audit fix
-
-To address all issues, run:
-  npm audit fix --force
-
-Run `npm audit` for details.
-```
-> npm install core-js
-
-```
-up to date, audited 158 packages in 956ms
-
-12 packages are looking for funding
-  run `npm fund` for details
-
-4 vulnerabilities (2 low, 2 high)
-
-To address issues that do not require attention, run:
-  npm audit fix
-
-To address all issues, run:
-  npm audit fix --force
-
-Run `npm audit` for details.
-```
-Then to be complete:
-
-> npm audit fix -- force
-
-```code
-p to date, audited 158 packages in 956ms
-
-12 packages are looking for funding
-  run `npm fund` for details
-
-# npm audit report
-
-clean-css  <4.1.11
-Regular Expression Denial of Service in clean-css - https://github.com/advisories/GHSA-wxhq-pm8v-cw75
-fix available via `npm audit fix`
-node_modules/clean-css
-  pug-filters  <=3.0.2
-  Depends on vulnerable versions of clean-css
-  node_modules/pug-filters
-
-pug-code-gen  <2.0.3
-Severity: high
-Remote code execution via the `pretty` option. - https://github.com/advisories/GHSA-p493-635q-r6gr
-fix available via `npm audit fix --force`
-Will install pug@2.0.4, which is outside the stated dependency range
-node_modules/pug-code-gen
-  pug  0.1.0 - 2.0.0-rc.4
-  Depends on vulnerable versions of pug-code-gen
-  Depends on vulnerable versions of pug-filters
-  node_modules/pug
-
-4 vulnerabilities (2 low, 2 high)
-
-To address issues that do not require attention, run:
-  npm audit fix
-
-To address all issues, run:
-  npm audit fix --force
- ``` 
-At express--2 we left pug at version 2 but now we will update this.
-
-> npm install pug
-
-```code
-up to date, audited 158 packages in 647ms
-
-12 packages are looking for funding
-  run `npm fund` for details
-
-4 vulnerabilities (2 low, 2 high)
-
-To address all issues, run:
-  npm audit fix
-
-Run `npm audit` for details.
-```
-> npm audit fix --force
-
-```code
-npm WARN using --force Recommended protections disabled.
-npm WARN audit Updating pug to 3.0.2, which is a SemVer major change.
-
-added 6 packages, removed 30 packages, changed 19 packages, and audited 131 packages in 4s
-
-12 packages are looking for funding
+20 packages are looking for funding
   run `npm fund` for details
 
 found 0 vulnerabilities
 ```
 
-Pug is now at version 3 as shown in package.json
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues, run:
+>  npm audit fix --force
+
+```code
+up to date, audited 168 packages in 6s
+
+20 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+To see what has been done:
+
+> npm audit report
+
+```code
+found 0 vulnerabilities
+```
+
+S the installation reflects package.json
 
 ```json
 {
@@ -205,12 +141,12 @@ Pug is now at version 3 as shown in package.json
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
-    "core-js": "^3.26.0",
+    "core-js": "^3.33.2",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "^4.18.2",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "nodemon": "^2.0.20",
+    "nodemon": "^3.0.1",
     "pug": "^3.0.2"
   }
 }
@@ -226,30 +162,30 @@ Retype new password:
 passwd: password updated successfully
 ```
 
-You can now quit the bash shell. Or change to the node user.
+You can now quit the bash shell. 
+For the time being remain as the root user.
 
->su node
 
 ### using http
 If you use https the browser should require a certificate.  Browsers are becoming stricter and may require a certificate even for https on localhost.  That may lead to the application not connecting to the browser.
 
-If this becomes a problem the formal fix is to create a certificate for localhost.
-
-As a workaround just use http for localhost.  To do this you can add a console log line to **myapp/bin/www.js**
+Looking at  **myapp/bin/www.js** note that the file is opening an http server not https.
 
 ```javascript
 /**
- * Listen on provided port, on all network interfaces.
+ * Create HTTP server.
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-console.log(`Running on http://127.0.0.1:${port}`);
+var server = http.createServer(app);
 ```
 
-Note that the server port used by this script is **3000** not 8080 as was the case in the previous example!
+Note that the server port used by this script is **3000**. 
+
+Check that the app still works
+
+> npm start
+>
+> 
 
 This will generate an output to the terminal when npm run start is invoked later down these notes:
 
@@ -257,18 +193,15 @@ This will generate an output to the terminal when npm run start is invoked later
 > myapp@0.0.0 start
 > nodemon ./bin/www
 
-[nodemon] 2.0.20
+[nodemon] 3.0.1
 [nodemon] to restart at any time, enter `rs`
 [nodemon] watching path(s): *.*
-[nodemon] watching extensions: js,mjs,json
+[nodemon] watching extensions: js,mjs,cjs,json
 [nodemon] starting `node ./bin/www`
-Running on http://127.0.0.1:3000
-GET / 304 103.559 ms - -
-GET /stylesheets/style.css 304 2.328 ms - -
 ```
 The http link is clickable and will open in the browser.
 
-
+> CTRL + C
 
 ## Developing the app with basic routing
 
@@ -276,7 +209,7 @@ There is no database yet so routing is just to provide confirmatory messages for
 
 ### app.js
 
-The file structure in express_app 3 is:
+The file structure in express_app 3 is similar to:
 
 ```code
  
@@ -418,7 +351,7 @@ block content
 
 In a similar way any HTTP requests which come in to '/users' such as '/users/fred' or '/users/jane' will be served by the routes described in **route/users.js**
 
-users.js does not render a page into the response, but simply sends a text message.
+users.js does not render a page into the response, but simply sends a place saver text message.
 
 ```javascript
 var express = require("express");
@@ -432,15 +365,15 @@ router.get("/", function(req, res, next) {
 module.exports = router;
 ```
 
-To see the output of the users route, with myapp2 running, browse to:
+To see the output of the users route, with myapp running, browse to:
 
 > localhost:3000/
 
-![/](rootroute.png)
+![/](images/rootroute.png)
 
 > localhost:3000/users
 
-![user](users.png)
+![user](images/users.png)
 
 
 To see a 404 error browse to:
@@ -471,12 +404,15 @@ Initially the database and its admin interface will be run together and this sec
 
 To get this started a new environment will be created featuring both these two applications and at a later point we will make the step to run the database with the express server.
 
-I note that the current version of mongodB is 6.0.2.  The current version of mongo-express is 0.54.0 (there is a 1.o version but this is only an alpha release).
+I note that the current version of [mongodB](https://www.mongodb.com/) is 7.0  The current version of [mongo-express](https://github.com/mongo-express/mongo-express) is 1.0.2.
+
+However we wil be drawing down from docker hub so need to see the version available there for [mongo express](https://hub.docker.com/_/mongo-express).  I will use tag 1.0-20-alpine3.18
 
 Create a new public github repository named **mongo--1** project. Add a gitnore file as you work in github.com based on Node. Add the following initial file to the .docker directory and nothing else:
 
-**.docker/docker-compose.yaml**
+The version of docker-compose.yaml which works uses mongo version 5 and express version 0.54.
 
+**.docker/docker-compose.yaml**
 ```yaml
 # Use root/example as user/password credentials
 version: "3.8"
@@ -525,19 +461,67 @@ networks:
   mongo1_network:
     driver: bridge
 ```
+
+Trying to bring the versions up to date with the code below is not working as the connection string is not recogniseed.  I suggest staying with the safe older version and not using this which I might work on in the background:
+
+**.docker/docker-compose.yaml  Not for Use**
+
+```yaml
+# Use root/example as user/password credentials
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:7.0
+    restart: always
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: local_library
+    volumes:
+    - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks: 
+      - mongo1_network
+    ports: 
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express:1.0-20-alpine3.18
+    restart: always
+    container_name: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_AUTH_USERNAME: root
+      ME_CONFIG_MONGODB_AUTH_PASSWORD: example
+      ME_CONFIG_MONGODB_AUTH_DATABASE: local_library
+      MONGODB_CONNSTRING: mongodb://root:example@mongodb:27017
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+#     ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: example
+    networks: 
+      - mongo1_network 
+  
+    depends_on:
+      - mongodb
+
+networks:
+  mongo1_network:
+    driver: bridge
+```
 The [compose file](https://docs.docker.com/compose/) describes two services each built from named images on docker hub.  The required ports are exposed for use.  The version 3.8 denotes the version of docker compose which should be compatible with the docker engine version being used.  A compatibility table is available [here](https://docs.docker.com/compose/compose-file/) with the full compose file specification.
 
 
-![mongo1 repository](compose.png)
-
-In order to use this docker compose file you must ensure that compose V2 is selected in docker desktop.
-
-![v2 selected](composeV2.png)
+![mongo1 repository](images/compose.png)
 
 
 
-
-The volumes line in docker-compose.yaml includes reference to a file mongo-init.js which we hve not created yet.  This will be used to initialise the database.
+The volumes line in docker-compose.yaml includes reference to a file mongo-init.js which we have not created yet.  This will be used to initialise the database.
 
 ```yaml
 
@@ -569,7 +553,7 @@ The relationships between these are:
 
 This relationship is captured in the UML diagram:
 
-![database uml](demo.png)
+![database uml](images/demo.png)
 
 So examples of inital database entries would be:
 
@@ -628,6 +612,7 @@ Add a file **mongo-init.js** to the mongo1 github site which will initialise the
 
 First set up variables, the database will have four collections as previously described, the data which is going into each of these will be stored to an array.
 
+**mongo-init.js**
 ```javascript
 let error = false;
 
@@ -897,15 +882,19 @@ if (error) {
 
 The file is added to github:
 
-![mongo-init.js](mongo-init.png)
+![mongo-init.js](images/mongo-init.png)
 
 ## Create a database dev environment 
 
 Create the new environment in Docker desktop.
 
-![create environment](createEnviron.png)
+![create environment](images/createEnviron.png)
 
-### troubleshooting
+This is a long download so be patient.
+
+![success](images/success.png)
+
+### Troubleshooting
 
 **VPN error**
 I have a VPN connected on my machine.  This autostarts, but I normally switch it off.
@@ -921,9 +910,15 @@ Removing login credentials for registry-1.docker.io
 ```
 Now creating the environment runs.
 
+## Inspecting the database
+
 The pull is completed and the environment is running:
 
-![pulled](pulled.png)
+![pulled](images/success.png)
+
+Continue
+
+![pulled](images/allset.png)
 
 Inspect the database at
 
@@ -970,86 +965,7 @@ You can add or update database entrie froom this editor.
 
 When you have finished stop the dev environment.
 
-## mongo 6 - not yet!
 
-**MONGO 6**
-
-If you change the mongodb version from 5.0 to 6.0 the first you will know about it is and error message which says mongo is unknown.  I tried this and from the code had used previously I tried removing
-
-```yaml
-    depends_on:
-      - mongo
-```
-This was causing an unknown dependancy error
-
-This pulls the dependant images and starts the environment and all initially looks well, however when you come to view the library it will offer an error.
-
-```code
-...
-Network mongo--1-interesting_gates_mongo1_network  Creating
-Network mongo--1-interesting_gates_mongo1_network  Created
-Container mongodb  Creating
-Container mongo-express  Creating
-Container mongo-express  Created
-Container mongodb  Created
-Container mongodb  Starting
-Container mongo-express  Starting
-Container mongo-express  Started
-Container mongodb  Started
-```
-
-![all set](allset.png)
-
-Select "done" and continue.
-
-
-In docker desktop create a new environment based on https://github.com.yourRepo/mongo1.
-
-
-When the build is complete you will see that the environment starts two containers.  These will automatically be connected by a [docker network ](https://docs.docker.com/network/) for connecting between separate containers. and able to cross communicate.
-
-The mongo express log can be seen by clicking the name on docker desktop.  This shows that there are a number of failed attempts to connect to mongodb, presumably this is while the database is starting, the end of the log shows success.
-
-```code
-Waiting for mongodb:27017...
-Tue Nov  8 11:20:00 UTC 2022 retrying to connect to mongodb:27017 (2/5)
-Tue Nov  8 11:20:01 UTC 2022 retrying to connect to mongodb:27017 (3/5)
-Tue Nov  8 11:20:02 UTC 2022 retrying to connect to mongodb:27017 (4/5)
-Tue Nov  8 11:20:03 UTC 2022 retrying to connect to mongodb:27017 (5/5)
-Welcome to mongo-express
-------------------------
-
-
-Mongo Express server listening at http://0.0.0.0:8081
-Waiting for mongodb:27017...
-Tue Nov  8 11:20:05 UTC 2022 retrying to connect to mongodb:27017 (2/5)
-Welcome to mongo-express
-------------------------
-
-
-Mongo Express server listening at http://0.0.0.0:8081
-Database connected
-Admin Database connected
-```
-
-
-Inspect the database at
-
-> http://localhost:8081/
-
-
-The browser asks you to sign in.  The Username was set to root and the password to example.
-
-![sign in](signin.png)
-
-
-Note that the local_library database has been created:
-
-
-
-![unsupported](unsupported.png)
-
-[Mongo 6.0 is a major update and some legacy code used by mongo-express 0.5 is not supported](https://www.mongodb.com/docs/v6.0/release-notes/6.0-compatibility/#legacy-opcodes-removed).  Since mongo-express 1.0 is still in alpha I suggest not using mongo 6 for the time being.
 
 ## exercise
 
