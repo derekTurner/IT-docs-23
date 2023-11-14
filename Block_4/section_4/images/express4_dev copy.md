@@ -1,6 +1,6 @@
 # Using mongoose to communicate between express and mongo
 
-In this section we will modify the express app with the mongoose ORM and combine it into the same environment as the database by extending the docker compose.yaml file.
+In this section we will modify the express app with the mongoose ORM and combine it into the same environment as the database by extending the docker-compose file.
 
 This will be done by creating a copy of express--3 in a new repository express--4.  This can be cloned locally to allow editing of the contents.
 
@@ -18,7 +18,7 @@ This will create a local copy of the express3 repository which is deleted at the
 
 Start by creating a new public github repository express--4 with a node .gitignore file.
 
-![new repository](images/newrepo.png)
+![new repository](newrepo.png)
 
 Create the local bare clone copy working in powershell;
 
@@ -44,23 +44,29 @@ Working in powershell make a github directory ready to receive the cloned site. 
 
 If you have github desktop then you can use that to create the local clone, but here I am using a git command.
 
-Change directory into the github folder, then.
+> cd documents
+
+> mkdir github
+
+> cd github
 
 > git clone https://github.com/derekTurner/express--4
 
 ```code
 Cloning into 'express--4'...
-remote: Enumerating objects: 79, done.
-remote: Counting objects: 100% (79/79), done.
-remote: Compressing objects: 100% (38/38), done.
-Receiving objects: 100% (79/79), 53.74 KiB | 454.00 KiB/s, done.
-remote: Total 79 (delta 29), reused 79 (delta 29), pack-reused 0
-Resolving deltas: 100% (29/29), done.
+remote: Enumerating objects: 66, done.
+remote: Counting objects: 100% (66/66), done.
+remote: Compressing objects: 100% (37/37), done.
+remote: Total 66 (delta 16), reused 66 (delta 16), pack-reused 0Receiving objects:  37% (25/66)
+Receiving objects: 100% (66/66), 43.33 KiB | 887.00 KiB/s, done.
+Resolving deltas: 100% (16/16), done.
 ```
 
-Open the new cloned site in Visual Studio Code.  **Note** that you are now looking at a local copy and not code running inside a docker container.
+Open the new cloned site in Visual Studio Code.  **Note** that you are now looking at a local copy and note code inside a docker container.
 
-![cloned site](images/clonedsite.png)
+![cloned site](clonedsite.png)
+
+![express-4 starter files](express4starter.webp)
 
 
 ## Database communications
@@ -71,20 +77,20 @@ The native approach produces the fastest response from the database.
 the
 The model approach allows the app to be developed to work with a range of available databases using  same code.
 
-The ODM used here to address the noSQL database Mongo is called [Mongoose](images/https://mongoosejs.com/).
+The ODM used here to address the noSQL database Mongo is called [Mongoose](https://mongoosejs.com/).
 
-A [mongoose primer](images/https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose#Mongoose_primer) is available from Mozilla developer.
+A [mongoose primer](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose#Mongoose_primer) is available from Mozilla developer.
 
 ## Mongoose
 
 Mongoose will be added to the express app to allow it to communicate with the database.
 
-The current version of Mongoose is 8.0.0
+The current version of Mongoose is 6.7.2
 
 
-These steps [are based on the tutorial](images/https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose)
+These steps [are based on the tutorial](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose)
 
-Update **myapp/package.json** to add [mongoose](images/https://mongoosejs.com/) into the dependancies.
+Update **myapp/package.json** to add [mongoose](https://mongoosejs.com/) into the dependancies.
 
 I have also added configuration for nodemon and a dependency of body-parser, which will be useful later on.
 
@@ -98,15 +104,15 @@ I have also added configuration for nodemon and a dependency of body-parser, whi
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
-    "core-js": "^3.33.2",
+    "core-js": "^3.26.0",
     "debug": "~2.6.9",
-    "express": "^4.18.2",
+    "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "nodemon": "^3.0.1",
+    "nodemon": "^2.0.20",
     "pug": "^3.0.2",
-    "mongoose":"^8.0.0",
-    "body-parser":"^1.20.2"
+    "mongoose":"^6.7.2",
+    "body-parser":"^1.20.1"
   },
   "nodemonConfig": {
     "delay": "1500",
@@ -138,11 +144,11 @@ As this example is developed we will launch both the database and the express ap
 
 To work with an Object Data Model we need to define objects which relate to the database.
 
-![database uml](images/demo.png)
+![database uml](demo.png)
 
 Now create a models folder within myapp and in this create each of author.js, book.js. bookinstance.js and genre.js.
 
-![models](images/models.png)
+![models](models.png)
 
 The files should be completed as:
 
@@ -268,7 +274,7 @@ module.exports = mongoose.model('Genre', GenreSchema);
 
 With models set the next thought is decide what routes will be needed and then implement controllers for these routes.
 
-This section is based on the tutorial on [Routes and controllers](images/https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/routes)
+This section is based on the tutorial on [Routes and controllers](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/routes)
 
 
 In setting up routes we are effectively designing the restful API for the server side of the application.
@@ -321,7 +327,7 @@ Express--4
        genreController.js  
 ```
 
-![controllers](images/controllers.png)
+![controllers](controllers.png)
 
 **authorController.js**
 
@@ -760,7 +766,7 @@ compose-dev.yaml
 
 In the previous section we used a docker compose file which launced the database and an editor in a single dev environment.  This must be modified to include the express server application.
 
-I will edit compose.yaml file so that it will start this app, the mongo database and the mongo admin site.
+I will edit docker-compose.yml so that it will start this app, the mongo database and the mongo admin site.
 
 
 
@@ -769,21 +775,17 @@ I will edit compose.yaml file so that it will start this app, the mongo database
 
 **Docker does not allow you to have two containers using the same name, this can be achieved by adding a version number to the container names: mongodb4, mongo-express4, server4.**
 
-Alternatively you can delete the old container mongo--1 (you don't need it the code is safely held on github).
-
 *I spent a l-o-n-g time getting this next file to work and a key factor is the order in which you declare the services.  If you declare the database services then the eventual docker environment will run node 12 and the app will fail.  If you declare the server first the docker environment will run node 19 and the app will work!*
 
-Note also that from docker version 4.13 you do not need to have files in the .docker folder, but rather the environment reads compose-dev.yaml in the root directory.  Since I have version 4.22.1 this is the way I have gone.
+Note also that from docker version 4.13 you do not need to have files in the .docker folder, but rather the environment reads compose-dev.yaml in the root directory.  Since I have version 4.13.1 this is the way I have gone.
 
-Delete the folder .docker and its contents.
+So editing the docker compose file to include a service named server4.
 
-Delete compose-dev.yaml if this exists.
+You can delete the file compose-dev.yaml then create a new docker-compose file in the .docker folder or compose-dev.yaml not in the docker folder as noted.
 
-So editing the docker compose.yaml file to include a service named server4.
+Delete .docker/config.json it's function will be replaced by the compose file.
 
-Add compose.yaml
-
-**compose.yaml** 
+**compose-dev.yaml** or .docker/docker-compose.yaml
 
 
 ```yaml
@@ -814,9 +816,10 @@ services:
       - mongodb
     networks: 
       - mongo1_network
+    # command: ["npm", "run", "start"]  
 
   mongodb:
-    image: mongo:7.0-rc-jammy
+    image: mongo:5.0
     restart: always
     container_name: mongodb4
     environment:
@@ -831,35 +834,29 @@ services:
       - 27017:27017
 
   mongo-express:
-    image: mongo-express:latest
+    image: mongo-express:0.54.0
     restart: always
     container_name: mongo-express4
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_BASICAUTH_USERNAME: root          #| ''              | mongo-express web username
-      ME_CONFIG_BASICAUTH_PASSWORD: example       #| ''              | mongo-express web password
-      ME_CONFIG_MONGODB_ENABLE_ADMIN: true        #| 'true'          | Enable admin access to all databases. Send strings: `"true"` or `"false"`
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root       #| ''              | MongoDB admin username
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example    #| ''              | MongoDB admin password
-      ME_CONFIG_MONGODB_PORT: 27017               #| 27017           | MongoDB port
-      ME_CONFIG_MONGODB_SERVER: mongodb           #| 'mongo'         | MongoDB container name. Use comma delimited list of host names for replica sets.
-      ME_CONFIG_OPTIONS_EDITORTHEME: default      #| 'default'       | mongo-express editor color theme, [more here](http://codemirror.net/demo/theme.html)
-      ME_CONFIG_REQUEST_SIZE: 100kb               #| '100kb'         | Maximum payload size. CRUD operations above this size will fail in [body-parser](https://www.npmjs.com/package/body-parser).
-      ME_CONFIG_SITE_BASEURL: /                   #| '/'             | Set the baseUrl to ease mounting at a subdirectory. Remember to include a leading and trailing slash.
-      ME_CONFIG_SITE_COOKIESECRET: cookiesecret   #| 'cookiesecret'  | String used by [cookie-parser middleware](https://www.npmjs.com/package/cookie-parser) to sign cookies.
-      ME_CONFIG_SITE_SESSIONSECRET: sessionsecret #| 'sessionsecret' | String used to sign the session ID cookie by [express-session middleware](https://www.npmjs.com/package/express-session).
-      ME_CONFIG_SITE_SSL_ENABLED: false           #| 'false'         | Enable SSL.
-      ME_CONFIG_SITE_SSL_CRT_PATH:                #| ''              | SSL certificate file.
-      ME_CONFIG_SITE_SSL_KEY_PATH:                #| ''              | SSL key file.
-
-      MONGODB_CONNSTRING: mongodb://root:example@mongodb:27017/
-
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_AUTH_USERNAME: root
+      ME_CONFIG_MONGODB_AUTH_PASSWORD: example
+      ME_CONFIG_MONGODB_AUTH_DATABASE: local_library
+      MONGODB_CONNSTRING: mongodb://root:example@mongodb:27017
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+      # ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: example
+    depends_on:
+      - mongodb  
     networks: 
       - mongo1_network 
-  
-    depends_on:
-      - mongodb
+      
+
 
 networks:
   mongo1_network:
@@ -868,10 +865,14 @@ networks:
 
 
 
-I have set the version of the docker compose format to 3.8.  The syntax employed here requires at least version 3.2. 
+I have set the version of the docker compose format to 3.8.  The syntax employed here requires at least version 3.2.  You can tell whether this is all compatible by looking at docker version in docker desktop.
 
 
-The current docker engine version is 24.  On the docker website the [docker-compose](https://docs.docker.com/compose/compose-file/) format is discussed. The version 3.8 requires docker version 19.03.0 or greater.  Look through this reference to review some of the syntax for the docker compose file.
+![docker version](dockerengine.png)
+
+
+
+The current docker engine version is 20.  On the docker website the [docker-compose](https://docs.docker.com/compose/compose-file/) format is discussed. The version 3.8 requires docker version 19.03.0 or greater.  Look through this reference to review some of the syntax for the docker compose file.
 
 ## Initialise the database
 
@@ -1073,101 +1074,90 @@ Provided that there are no errors, your local copy of express-4 can be deleted. 
 
 ## Create the express-4 environment
 
-From docker desktop, close and running containers and create an new development environment
+From docker desktop, create an new development environment
 
-![create environment](images/createexpress--4.png)
+![create environment](createexpress--4.png)
 
 
-![docker environment for express 4](images/devenv.png)
+![docker environment for express 4](express4Environment.png)
 
 Open the server 4 container in vscode from the docker desktop.
 
-![container server 4](images/servernoderun.png)
+![container server 4](server4run.png)
 
-Note that the files imported match the  steps outlined above.
+Note that the files impoorted match the  steps outlined above.
 
-Open a terminal.  Set the root password to "node" follow which user is used as below (not sure if this is essential, but it works!).
-
->su node
+Set the root password to "node" follow which user is used as below (not sure if this is essential, but it works!).
 
 Now to install dependencies.  
->node@70378342d21e:/com.docker.devenvironments.code$ npm install
-
-Then 
-
-> cd myapp
 
 >node@3f6d4c7e7674:/com.docker.devenvironments.code/myapp$ npm install
 
 ```code
-added 191 packages, and audited 192 packages in 14s
+added 252 packages, and audited 253 packages in 14s
 
-21 packages are looking for funding
+20 packages are looking for funding
   run `npm fund` for details
 
-found 0 vulnerabilities 
+found 0 vulnerabilities
+npm notice 
+npm notice New major version of npm available! 8.19.2 -> 9.1.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v9.1.1
+npm notice Run npm install -g npm@9.1.1 to update!
+npm notice 
 ```
+Ok so updating this:
 
+>root@3f6d4c7e7674:/com.docker.devenvironments.code/myapp# npm install -g npm@9.1.1
+
+```code
+removed 13 packages, changed 74 packages, and audited 223 packages in 5s
+
+14 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
 Now the app can be started:
 
-> node@70378342d21e:/com.docker.devenvironments.code/myapp$ npm run start
+>root@3f6d4c7e7674:/com.docker.devenvironments.code/myapp# su node
+
+>node@3f6d4c7e7674:/com.docker.devenvironments.code/myapp$ npm run start
 
 ```code
 > myapp@0.0.0 start
 > nodemon ./bin/www
 
-[nodemon] 3.0.1
+[nodemon] 2.0.20
 [nodemon] reading config ./package.json
 [nodemon] to restart at any time, enter `rs`
-[nodemon] or send SIGHUP to 8096 to restart
+[nodemon] or send SIGHUP to 17098 to restart
 [nodemon] watching path(s): *.*
-[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] watching extensions: js,mjs,json
 [nodemon] starting `node ./bin/www`
 [nodemon] forking
-[nodemon] child pid: 8109
-[nodemon] watching 19 files
-(node:8109) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-(Use `node --trace-warnings ...` to show where the warning was created)
-(node:8109) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+[nodemon] child pid: 17111
+[nodemon] watching 20 files
+Running on http://127.0.0.1:3000
 ```
 
 The database and its' editor should both be working as normal. (using username root and password example)
 
 > http://localhost:8081/db/local_library/author
 
-![still working](images/stillworking.png)
+![still working](stillworking.png)
 
-If not it may have moved onto port 8082 as the previous version had held onto 8081.
-
-
-The editor and database will work as before.  
+and the editor and database will work as before.  
 
 The app can be viewed in a browser at port 3000.  I have gone over to edge because firefox was so fussy about lot liking http.
 
 > http://localhost:3000/catalog
 
-I note some warnings that options on the mongoDB driver have become outdated.  So remove these from app.js.
-
-Replace the lines in app.js
-```javascript
-mongoose.connect(mongoDB, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true
-});
-```
-
-with shorter version
-```javascript
-mongoose.connect(mongoDB);
-```
-
-Note that the port may step from 3000 to 3001 is 3000 had already been runing.
-
-![catalog not implemented](images/catalog.png)
+![catalog not implemented](catalog.png)
 
 > http://localhost:3000/catalog/authors
 
-![catalog authors not implemented](images/catalogAuthors.png)
+![catalog authors not implemented](catalogAuthors.png)
 
 ## check operation of stack at this stage
 
@@ -1176,37 +1166,37 @@ View the admin site in the browser at port 8081 and check some of the data notin
 
 Using this information check the following testing links which should all give the appropriate "not implemented" message.
 
-[catalog/](images/http://localhost:3000/catalog)   
+[catalog/](http://localhost:3000/catalog)   
 
  
-[catalog/books](images/http://localhost:3000/catalog/books)  
-[catalog/authors](images/http://localhost:3000/catalog/authors)  
-[catalog/genres](images/http://localhost:3000/catalog/genres)  
-[catalog/bookinstances](images/http://localhost:3000/catalog/bookinstances)  
+[catalog/books](http://localhost:3000/catalog/books)  
+[catalog/authors](http://localhost:3000/catalog/authors)  
+[catalog/genres](http://localhost:3000/catalog/genres)  
+[catalog/bookinstances](http://localhost:3000/catalog/bookinstances)  
 
 
-[catalog/book/:id](images/http://localhost:3000/catalog/book/5dc21650ae5da3ca57ebc53d)  
-[catalog/author/:id](images/http://localhost:3000/catalog/author/5dc21650ae5da3ca57ebc535)  
-[catalog/genre/:id](images/http://localhost:3000/catalog/genre/5dc21650ae5da3ca57ebc53a)  
-[catalog/bookinstance/:id](images/http://localhost:3000/catalog/bookinstance/5dc21650ae5da3ca57ebc544)  
+[catalog/book/:id](http://localhost:3000/catalog/book/5dc21650ae5da3ca57ebc53d)  
+[catalog/author/:id](http://localhost:3000/catalog/author/5dc21650ae5da3ca57ebc535)  
+[catalog/genre/:id](http://localhost:3000/catalog/genre/5dc21650ae5da3ca57ebc53a)  
+[catalog/bookinstance/:id](http://localhost:3000/catalog/bookinstance/5dc21650ae5da3ca57ebc544)  
 
  
-[catalog/book/create](images/http://localhost:3000/catalog/book/create)  
-[catalog/author/create](images/http://localhost:3000/catalog/author/create)  
-[catalog/genre/create](images/http://localhost:3000/catalog/genre/create)  
-[catalog/bookinstance/create](images/http://localhost:3000/catalog/bookinstance/create)  
+[catalog/book/create](http://localhost:3000/catalog/book/create)  
+[catalog/author/create](http://localhost:3000/catalog/author/create)  
+[catalog/genre/create](http://localhost:3000/catalog/genre/create)  
+[catalog/bookinstance/create](http://localhost:3000/catalog/bookinstance/create)  
 
 
-[catalog/book/:id/update](images/http://localhost:3000/catalog/book/5dc21650ae5da3ca57ebc53d/update)  
-[catalog/author/:id/update](images/http://localhost:3000/catalog/author/5dc21650ae5da3ca57ebc535/update)  
-[catalog/genre/:id/update](images/http://localhost:3000/catalog/genre/5dc21650ae5da3ca57ebc53a/update)  
-[catalog/bookinstance/:id/update](images/http://localhost:3000/catalog/bookinstance/5dc21650ae5da3ca57ebc544/update)  
+[catalog/book/:id/update](http://localhost:3000/catalog/book/5dc21650ae5da3ca57ebc53d/update)  
+[catalog/author/:id/update](http://localhost:3000/catalog/author/5dc21650ae5da3ca57ebc535/update)  
+[catalog/genre/:id/update](http://localhost:3000/catalog/genre/5dc21650ae5da3ca57ebc53a/update)  
+[catalog/bookinstance/:id/update](http://localhost:3000/catalog/bookinstance/5dc21650ae5da3ca57ebc544/update)  
 
 
-[catalog/book/:id/delete](images/http://localhost:3000/catalog/book/5dc21650ae5da3ca57ebc53d/delete)  
-[catalog/author/:id/delete](images/http://localhost:3000/catalog/author/5dc21650ae5da3ca57ebc535/delete)  
-[catalog/genre/:id/delete](images/http://localhost:3000/catalog/genre/5dc21650ae5da3ca57ebc53a/delete)  
-[catalog/bookinstance/:id/delete](images/http://localhost:3000/catalog/bookinstance/5dc21650ae5da3ca57ebc544/delete) 
+[catalog/book/:id/delete](http://localhost:3000/catalog/book/5dc21650ae5da3ca57ebc53d/delete)  
+[catalog/author/:id/delete](http://localhost:3000/catalog/author/5dc21650ae5da3ca57ebc535/delete)  
+[catalog/genre/:id/delete](http://localhost:3000/catalog/genre/5dc21650ae5da3ca57ebc53a/delete)  
+[catalog/bookinstance/:id/delete](http://localhost:3000/catalog/bookinstance/5dc21650ae5da3ca57ebc544/delete) 
 
 
 Next step will be to implement these routes.
