@@ -462,9 +462,23 @@ networks:
     driver: bridge
 ```
 
-Trying to bring the versions up to date with the code below is not working as the connection string is not recogniseed.  I suggest staying with the safe older version and not using this which I might work on in the background:
+Code to utilize the latest versions of mongodb (7.0) and mongo express (1.0-20) is now working and to use this rquires the followint adjustments.  Feel free to follow this or to continue using mongo version 5.0 with the older mongo express 0.54
 
-**.docker/docker-compose.yaml  Not for Use**
+The practice of storing the docker-compose file in the .docker folder has changed.  The compose file should now be named compose.yaml and be placed directly in the root of the project.  So the .docker folder and all its contents can be deleted from github and replaced by:
+
+**compose.yaml**
+
+```yaml
+
+```
+The [compose file](https://docs.docker.com/compose/) describes two services each built from named images on docker hub.  The required ports are exposed for use.  The version 3.8 denotes the version of docker compose which should be compatible with the docker engine version being used.  A compatibility table is available [here](https://docs.docker.com/compose/compose-file/) with the full compose file specification.
+
+
+![mongo1 repository](images/compose.png)
+
+
+
+The volumes line in docker-compose.yaml includes reference to a file mongo-init.js which we have not created yet.  This will be used to initialise the database.
 
 ```yaml
 # Use root/example as user/password credentials
@@ -472,7 +486,7 @@ version: "3.8"
 
 services:
   mongodb:
-    image: mongo:7.0
+    image: mongo:7.0-rc-jammy
     restart: always
     container_name: mongodb
     environment:
@@ -487,23 +501,30 @@ services:
       - 27017:27017
 
   mongo-express:
-    image: mongo-express:1.0-20-alpine3.18
+    image: mongo-express:latest
     restart: always
     container_name: mongo-express
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_AUTH_USERNAME: root
-      ME_CONFIG_MONGODB_AUTH_PASSWORD: example
-      ME_CONFIG_MONGODB_AUTH_DATABASE: local_library
-      MONGODB_CONNSTRING: mongodb://root:example@mongodb:27017
-      ME_CONFIG_MONGODB_SERVER: mongodb
-      ME_CONFIG_MONGODB_PORT: 27017
-#     ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
-      ME_CONFIG_BASICAUTH_USERNAME: root
-      ME_CONFIG_BASICAUTH_PASSWORD: example
+      ME_CONFIG_BASICAUTH_USERNAME: root          #| ''              | mongo-express web username
+      ME_CONFIG_BASICAUTH_PASSWORD: example       #| ''              | mongo-express web password
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true        #| 'true'          | Enable admin access to all databases. Send strings: `"true"` or `"false"`
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root       #| ''              | MongoDB admin username
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example    #| ''              | MongoDB admin password
+      ME_CONFIG_MONGODB_PORT: 27017               #| 27017           | MongoDB port
+      ME_CONFIG_MONGODB_SERVER: mongodb           #| 'mongo'         | MongoDB container name. Use comma delimited list of host names for replica sets.
+      ME_CONFIG_OPTIONS_EDITORTHEME: default      #| 'default'       | mongo-express editor color theme, [more here](http://codemirror.net/demo/theme.html)
+      ME_CONFIG_REQUEST_SIZE: 100kb               #| '100kb'         | Maximum payload size. CRUD operations above this size will fail in [body-parser](https://www.npmjs.com/package/body-parser).
+      ME_CONFIG_SITE_BASEURL: /                   #| '/'             | Set the baseUrl to ease mounting at a subdirectory. Remember to include a leading and trailing slash.
+      ME_CONFIG_SITE_COOKIESECRET: cookiesecret   #| 'cookiesecret'  | String used by [cookie-parser middleware](https://www.npmjs.com/package/cookie-parser) to sign cookies.
+      ME_CONFIG_SITE_SESSIONSECRET: sessionsecret #| 'sessionsecret' | String used to sign the session ID cookie by [express-session middleware](https://www.npmjs.com/package/express-session).
+      ME_CONFIG_SITE_SSL_ENABLED: false           #| 'false'         | Enable SSL.
+      ME_CONFIG_SITE_SSL_CRT_PATH:                #| ''              | SSL certificate file.
+      ME_CONFIG_SITE_SSL_KEY_PATH:                #| ''              | SSL key file.
+
+      MONGODB_CONNSTRING: mongodb://root:example@mongodb:27017/
+
     networks: 
       - mongo1_network 
   
@@ -514,21 +535,8 @@ networks:
   mongo1_network:
     driver: bridge
 ```
-The [compose file](https://docs.docker.com/compose/) describes two services each built from named images on docker hub.  The required ports are exposed for use.  The version 3.8 denotes the version of docker compose which should be compatible with the docker engine version being used.  A compatibility table is available [here](https://docs.docker.com/compose/compose-file/) with the full compose file specification.
 
-
-![mongo1 repository](images/compose.png)
-
-
-
-The volumes line in docker-compose.yaml includes reference to a file mongo-init.js which we have not created yet.  This will be used to initialise the database.
-
-```yaml
-
-    volumes:
-    - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-
-```
+Here I have added the default values of environmental variables as comments.  These may be removed if you want to reduce the code.
 
 
 
@@ -883,6 +891,8 @@ if (error) {
 The file is added to github:
 
 ![mongo-init.js](images/mongo-init.png)
+
+Note that if you are using the mongodb 7.0 that this file and compose.yaml will be in the same root position and .docker folder will have been deleted.
 
 ## Create a database dev environment 
 
