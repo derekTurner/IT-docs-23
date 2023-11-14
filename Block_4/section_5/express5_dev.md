@@ -36,82 +36,8 @@ Then remove the local repository
 
 If necessary, manually remove the local copy of express--3.git which is probably in your users directory.
 
-For docker to work it requires all references in the **compose-dev.yaml** file to be unique so edit this in github replacing container name server4 with server 5 and container name mongodb4 with mongodb5.
+For docker to work it requires all references in the **compose-dev.yaml** file to be unique so make sure that old containers are removed from docker before trying to create the next environment.
 
-```Docker
-# Use root/example as user/password credentials
-version: "3.8"
-
-services:
-  server:
-    entrypoint:
-    - sleep
-    - infinity
-    image: node:latest
-    init: true
-    volumes:
-    - type: bind
-      source: /var/run/docker.sock
-      target: /var/run/docker.sock
-    # build:
-    #  context: myapp
-    restart: always
-    
-    container_name: server5
-    ports:
-    - 3000:3000
-    environment:
-      MONGODB_CONNSTRING: mongodb://root:example@mongodb:27017
-    depends_on:
-      - mongodb
-    networks: 
-      - mongo1_network
-    # command: ["npm", "run", "start"]  
-
-  mongodb:
-    image: mongo:5.0
-    restart: always
-    container_name: mongodb5
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: local_library
-    volumes:
-    - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-    networks: 
-      - mongo1_network
-    ports: 
-      - 27017:27017
-
-  mongo-express:
-    image: mongo-express:0.54.0
-    restart: always
-    container_name: mongo-express5
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_AUTH_USERNAME: root
-      ME_CONFIG_MONGODB_AUTH_PASSWORD: example
-      ME_CONFIG_MONGODB_AUTH_DATABASE: local_library
-      MONGODB_CONNSTRING: mongodb://root:example@mongodb:27017
-      ME_CONFIG_MONGODB_SERVER: mongodb
-      ME_CONFIG_MONGODB_PORT: 27017
-      # ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
-      ME_CONFIG_BASICAUTH_USERNAME: root
-      ME_CONFIG_BASICAUTH_PASSWORD: example
-    depends_on:
-      - mongodb  
-    networks: 
-      - mongo1_network 
-      
-
-
-networks:
-  mongo1_network:
-    driver: bridge
-```
 
 
 This section is working through the Mozilla tutorial section 5 [Displaying Library data](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Displaying_data)
@@ -533,11 +459,9 @@ Add the connection and authorisation lines to the mongoose connection (taking ca
 ```javascript
 //Set up mongoose connection
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb://mongodb5:27017/local_library';
+const mongoDB = 'mongodb://mongodb:27017/local_library';
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoDB, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true,
   auth: {     
   username: "root",     
   password: "example"  
@@ -547,20 +471,12 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 ```
 
-Here the url 'mongodb5' is the name of the container which the database runs in whch is established in the docker-compose file.
-
-```yaml
-    image: mongo:5.0
-    restart: always
-    container_name: mongodb5
-```
+Here the url 'mongodb' is the name of the container which the database runs in whch is established in the docker-compose file.
 
 When the connection string is used to make a connection the auth object must match the user and password of the local_library user.
 
 ```javascript
 mongoose.connect(mongoDB, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true,
   auth: {
   user: "admin",
   password: "password"
@@ -631,16 +547,16 @@ Add [async](https://www.npmjs.com/package/async) to package.json
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
-    "core-js": "^3.26.0",
+    "core-js": "^3.33.2",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "^4.18.2",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "nodemon": "^2.0.20",
+    "nodemon": "^3.0.1",
     "pug": "^3.0.2",
-    "mongoose":"^6.7.2",
-    "body-parser":"^1.20.1",
-    "async":"^3.2.4"
+    "mongoose":"^8.0.0",
+    "body-parser":"^1.20.2",
+    "async":"^3.2.5"
   },
   "nodemonConfig": {
     "delay": "1500",
@@ -648,6 +564,7 @@ Add [async](https://www.npmjs.com/package/async) to package.json
   }
 }
 ```
+
 
 In the folder myapp, install the dependancy file 'async'
 
@@ -988,16 +905,16 @@ Add this module to package.json (this will require a fresh install build to appl
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
-    "core-js": "^3.26.0",
+    "core-js": "^3.33.2",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "^4.18.2",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "nodemon": "^2.0.20",
+    "nodemon": "^3.0.1",
     "pug": "^3.0.2",
-    "mongoose":"^6.7.2",
-    "body-parser":"^1.20.1",
-    "async":"^3.2.4",
+    "mongoose":"^8.0.0",
+    "body-parser":"^1.20.2",
+    "async":"^3.2.5",
     "moment":"2.29.4"
   },
   "nodemonConfig": {
@@ -1006,6 +923,7 @@ Add this module to package.json (this will require a fresh install build to appl
   }
 }
 ```
+
 Stop the server running.
 
 >CTRL + C
