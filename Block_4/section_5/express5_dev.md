@@ -36,7 +36,7 @@ Then remove the local repository
 
 If necessary, manually remove the local copy of express--3.git which is probably in your users directory.
 
-For docker to work it requires all references in the **compose-dev.yaml** file to be unique so make sure that old containers are removed from docker before trying to create the next environment.
+For docker to work it requires all references in the **compose.yaml** file to be unique so make sure that old containers are removed from docker before trying to create the next environment.
 
 
 
@@ -454,7 +454,7 @@ Now edit changes to **app.js** .
 
 The mongo-express application can access the database already but app.js can't yet because the connection string has not been correctly completed with user authentication.
 
-Add the connection and authorisation lines to the mongoose connection (taking care of mongodb5 and a comma after true):
+Add the connection and authorisation lines to the mongoose connection. 
 
 ```javascript
 //Set up mongoose connection
@@ -486,65 +486,17 @@ mongoose.connect(mongoDB, {
 
 The application can now successfully interact with the local_library database.
 
+## Mongoose version 8
 
+Because Mongoose version 8 is now being used, some of the syntax is different from version 7.  In particular callbacks on model methods are no longer accepted.
 
+So some modification will be needed in the controller files.
 
+Since we want to make a number of requests in response to a route and these are generally asynchronous the [express-asynchonous-handler](https://www.npmjs.com/package/express-async-handler) will be used.
 
-## Asynchronous flow
-
-Information will be requested asynchonously.
-
-If the information can be gained from a single request  the format of the query is relatively straightforward.
-
-Specify an operation to perform and a callback function which will handle the results.  The callback function will have two parameters, the first is an error value, which is null if there is no error and the second is the results from the operation.
-
-In this code, count is a [Mongoose Method](https://mongoosejs.com/docs/api.html#model_Model.count).
-
-
-```javascript
-exports.some_model_count = function(req, res, next) {
- 
-  SomeModel.count({ a_model_field:'match_value', 
-  function (err, result) {// callback
-    if (err){console.log('error ', err)
-    }else{
-      res.render('the_template', { data: result });
-    }
-  });
-}
-```
-
-However if multiple asynchronous queries are made the result can't be displayed till all callbacks are complete.  to handle this use the npn *async* module.
-
-The example below shows parallel callbacks which are passed as and object to async.parallel and the results come back in an object with the property names preserved.
-
-```javascript
-async.parallel({ 
-  one: function(callback) { ... },
-  two: function(callback) { ... },
-  //...
-  something: function(callback) { ... }
-  }, 
-  // optional callback
-  function(err, results) {
-    // 'results' is now equal to: 
-    {one: 1, two: 2, ..., something: some_value}
-  }
-);
-```
-
-Async also allows for queries in series or waterfall ordering.  The current version of async is 3.2.4 and this is compatible.
-
-Add [async](https://www.npmjs.com/package/async) to package.json
+Modify Package.json to include this as an extra dependency.
 
 ```json
-{
-  "name": "myapp",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "start": "nodemon ./bin/www"
-  },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "core-js": "^3.33.2",
@@ -556,42 +508,241 @@ Add [async](https://www.npmjs.com/package/async) to package.json
     "pug": "^3.0.2",
     "mongoose":"^8.0.0",
     "body-parser":"^1.20.2",
-    "async":"^3.2.5"
+    "express-async-handler":"^1.2.0"
   },
-  "nodemonConfig": {
-    "delay": "1500",
-    "verbose": "true"
-  }
-}
 ```
 
+Then:
 
-In the folder myapp, install the dependancy file 'async'
+> npm install
 
->npm install
+## Asynchronous flow
 
-```code
-added 1 package, and audited 254 packages in 769ms
+Information will be requested asynchonously.
 
-20 packages are looking for funding
-  run `npm fund` for details
 
-found 0 vulnerabilities
-```
-
-Note that async is not required in app.js.  It is only needed in files which use it and the first of these is **bookController.js**  This will also require the author and genre models for normalised database operation.  Add these lines:
+Note that express-async-handler is not required in app.js.  It is only needed in files which use it and the first of these is **bookController.js**  This will also require the author and genre models for normalised database operation.  Modify 
 
 **bookController.js**
 ```javascript
-var Book = require('../models/book');
-var Author = require('../models/author');
-var Genre = require('../models/genre');
-var BookInstance = require('../models/bookinstance');
+var Book = require("../models/book");
+var Author = require("../models/author");
+var Genre = require("../models/genre");
+var BookInstance = require("../models/bookinstance");
 
-var async = require('async');
+const asyncHandler = require("express-async-handler");
+
+exports.index = asyncHandler(async (req, res, next) => {
+  // Get details of books, book instances, authors and genre counts (in parallel)
+  const [
+    numBooks,
+    numBookInstances,
+    numAvailableBookInstances,
+    numAuthors,
+    numGenres,
+  ] = await Promise.all([
+    Book.countDocuments({}).exec(),
+    BookInstance.countDocuments({}).exec(),
+    BookInstance.countDocuments({ status: "Available" }).exec(),
+    Author.countDocuments({}).exec(),
+    Genre.countDocuments({}).exec(),
+  ]);
+
+  res.render("index", {
+    title: "Local Library Home",
+    book_count: numBooks,
+    book_instance_count: numBookInstances,
+    book_instance_available_count: numAvailableBookInstances,
+    author_count: numAuthors,
+    genre_count: numGenres,
+  });
+});
+
+// Display list of all books.
+exports.book_list = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Book list");
+});
+
+// Display detail page for a specific book.
+exports.book_detail = asyncHandler(async (req, res, next) => {
+  res.send(`NOT IMPLEMENTED: Book detail: ${req.params.id}`);
+});
+
+// Display book create form on GET.
+exports.book_create_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Book create GET");
+});
+
+// Handle book create on POST.
+exports.book_create_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Book create POST");
+});
+
+// Display book delete form on GET.
+exports.book_delete_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Book delete GET");
+});
+
+// Handle book delete on POST.
+exports.book_delete_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Book delete POST");
+});
+
+// Display book update form on GET.
+exports.book_update_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Book update GET");
+});
+
+// Handle book update on POST.
+exports.book_update_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Book update POST");
+});
 
 ```
-The details of this file are discussed in a later section.
+
+The other controllers should also be updated to use the express-async-handler.
+
+**authorcontroller.js**
+```javascript
+var Author = require('../models/author');
+const asyncHandler = require("express-async-handler");
+
+// Display list of all Authors.
+exports.author_list = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Author list");
+});
+
+// Display detail page for a specific Author.
+exports.author_detail = asyncHandler(async (req, res, next) => {
+  res.send(`NOT IMPLEMENTED: Author detail: ${req.params.id}`);
+});
+
+// Display Author create form on GET.
+exports.author_create_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Author create GET");
+});
+
+// Handle Author create on POST.
+exports.author_create_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Author create POST");
+});
+
+// Display Author delete form on GET.
+exports.author_delete_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Author delete GET");
+});
+
+// Handle Author delete on POST.
+exports.author_delete_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Author delete POST");
+});
+
+// Display Author update form on GET.
+exports.author_update_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Author update GET");
+});
+
+// Handle Author update on POST.
+exports.author_update_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Author update POST");
+});
+```
+
+**genreController.js**
+```javascript
+const Genre = require("../models/genre");
+const asyncHandler = require("express-async-handler");
+
+// Display list of all Genre.
+exports.genre_list = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Genre list");
+});
+
+// Display detail page for a specific Genre.
+exports.genre_detail = asyncHandler(async (req, res, next) => {
+  res.send(`NOT IMPLEMENTED: Genre detail: ${req.params.id}`);
+});
+
+// Display Genre create form on GET.
+exports.genre_create_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Genre create GET");
+});
+
+// Handle Genre create on POST.
+exports.genre_create_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Genre create POST");
+});
+
+// Display Genre delete form on GET.
+exports.genre_delete_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Genre delete GET");
+});
+
+// Handle Genre delete on POST.
+exports.genre_delete_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Genre delete POST");
+});
+
+// Display Genre update form on GET.
+exports.genre_update_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Genre update GET");
+});
+
+// Handle Genre update on POST.
+exports.genre_update_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Genre update POST");
+});
+
+```
+
+
+And finally,
+**bookinstanceController.js**
+```javascript
+const BookInstance = require("../models/bookinstance");
+const asyncHandler = require("express-async-handler");
+
+// Display list of all BookInstances.
+exports.bookinstance_list = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: BookInstance list");
+});
+
+// Display detail page for a specific BookInstance.
+exports.bookinstance_detail = asyncHandler(async (req, res, next) => {
+  res.send(`NOT IMPLEMENTED: BookInstance detail: ${req.params.id}`);
+});
+
+// Display BookInstance create form on GET.
+exports.bookinstance_create_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: BookInstance create GET");
+});
+
+// Handle BookInstance create on POST.
+exports.bookinstance_create_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: BookInstance create POST");
+});
+
+// Display BookInstance delete form on GET.
+exports.bookinstance_delete_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: BookInstance delete GET");
+});
+
+// Handle BookInstance delete on POST.
+exports.bookinstance_delete_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: BookInstance delete POST");
+});
+
+// Display BookInstance update form on GET.
+exports.bookinstance_update_get = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: BookInstance update GET");
+});
+
+// Handle bookinstance update on POST.
+exports.bookinstance_update_post = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: BookInstance update POST");
+});
+
+```
 
 
 ## Views vs API
@@ -623,6 +774,54 @@ block content
   h1= title
   p Welcome to #{title}
 ```
+
+Look again at the way in which bookcontroller now collects the data on the books in response to a catalog/ route.
+
+**bookController.js**
+```javascript
+exports.index = asyncHandler(async (req, res, next) => {
+  // Get details of books, book instances, authors and genre counts (in parallel)
+  const [
+    numBooks,
+    numBookInstances,
+    numAvailableBookInstances,
+    numAuthors,
+    numGenres,
+  ] = await Promise.all([
+    Book.countDocuments({}).exec(),
+    BookInstance.countDocuments({}).exec(),
+    BookInstance.countDocuments({ status: "Available" }).exec(),
+    Author.countDocuments({}).exec(),
+    Genre.countDocuments({}).exec(),
+  ]);
+
+  res.render("index", {
+    title: "Local Library Home",
+    book_count: numBooks,
+    book_instance_count: numBookInstances,
+    book_instance_available_count: numAvailableBookInstances,
+    author_count: numAuthors,
+    genre_count: numGenres,
+  });
+});
+```
+Update index.pug to recieve and display the parameters rendered;
+
+**index.pug**
+```javascript
+  if error
+    p Error getting dynamic content.
+  else
+    p The library has the following record counts:
+
+    ul
+      li #[strong Books:] !{book_count}
+      li #[strong Copies:] !{book_instance_count}
+      li #[strong Copies available:] !{book_instance_available_count} 
+      li #[strong Authors:] !{author_count}
+      li #[strong Genres:] !{genre_count}
+```
+
 
 Modify **myapp/views/layout.pug** to create a local_library base template which will look like a home page for the application which will later be replaced by react code.
 
@@ -665,6 +864,7 @@ html(lang='en')
                 
         div(class='col-sm-10')
           block content
+
 ```
 
 Note that this uses bootstrap from the content delivery networks.  This could be replaced a links to a downloaded javascript library if required.
@@ -690,78 +890,10 @@ The [home page](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Expre
 router.get('/', book_controller.index);
 ```
 
-This callback index is defined in **/controllers/bookController.js**
-
-```javascript
-exports.index = function(req, res) {
-    res.send('NOT IMPLEMENTED: Site Home Page');
-};
-```
-
-The controller index will fetch information about how many Book, BookInstance, Author and Genre records are held in the database.  Render this as HTML and return it in an HTTP response.
 
 The Mongoose [countDocuments()](https://mongoosejs.com/docs/api.html#model_Model.countDocuments) method is used to cound the number of instances for each model.
 
-Edit **bookController.js**, replacing exports.index with:
 
-```javascript
-var Book = require('../models/book');
-var Author = require('../models/author');
-var Genre = require('../models/genre');
-var BookInstance = require('../models/bookinstance');
-
-var async = require('async');
-
-exports.index = function(req, res) {   
-    
-    async.parallel({
-        book_count: function(callback) {
-            Book.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
-        },
-        book_instance_count: function(callback) {
-            BookInstance.countDocuments({}, callback);
-        },
-        book_instance_available_count: function(callback) {
-            BookInstance.countDocuments({status:'Available'}, callback);
-        },
-        author_count: function(callback) {
-            Author.countDocuments({}, callback);
-        },
-        genre_count: function(callback) {
-            Genre.countDocuments({}, callback);
-        }
-    }, function(err, results) {
-        res.render('index', { title: 'Local Library Home', error: err, data: results });
-    });
-};
-```
-This renders the page even if there is an error, so would need a bit of tidying for a public interface.
-
-Now replace the contents of /views/index.pug with:
-
-```pug
-extends layout
-
-block content
-  h1= title
-  p Welcome to #[em LocalLibrary], a very basic Express website developed as a tutorial example on the Mozilla Developer Network.
-
-  h1 Dynamic content
-
-  if error
-    p Error getting dynamic content.
-  else
-    p The library has the following record counts:
-
-    ul
-      li #[strong Books:] !{data.book_count}
-      li #[strong Copies:] !{data.book_instance_count}
-      li #[strong Copies available:] !{data.book_instance_available_count} 
-      li #[strong Authors:] !{data.author_count}
-      li #[strong Genres:] !{data.genre_count}
-```
-
-The view offers an error message if an error is found otherwise it displays the data.
 
 In the browser
 
@@ -780,26 +912,25 @@ In /controllers/bookController.js, replace
 
 ```javascript
 // Display list of all books.
-exports.book_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book list');
-};
+exports.book_list = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Book list");
+});
 
 ```
 
 with the new exported book_list() method.
 
 ```javascript
-// Display list of all Books.
-exports.book_list = function(req, res, next) {
+// Display list of all books.
+exports.book_list = asyncHandler(async (req, res, next) => {
+  const allBooks = await Book.find({}, "title author")
+    .sort({ title: 1 })
+    .populate("author")
+    .exec();
 
-  Book.find({}, 'title author')
-    .populate('author')
-    .exec(function (err, list_books) {
-      if (err) { return next(err); }
-      //Successful, so render
-      res.render('book_list', { title: 'Book List', book_list: list_books });
-    }); 
-};
+  res.render("book_list", { title: "Book List", book_list: allBooks });
+});
+
 ```
 Create /views/book_list.pug with the content:
 
@@ -808,16 +939,16 @@ extends layout
 
 block content
   h1= title
-  
+
   ul
-    - book_list.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
     each book in book_list
-      li 
-        a(href=book.url) #{book.title} 
+      li
+        a(href=book.url) #{book.title}
         |  (#{book.author.name})
 
     else
       li There are no books.
+
 ```
 
 > http://localhost:3000/catalog/books
@@ -825,7 +956,7 @@ block content
 ![Book List](bookList.png)
 
 
-This uses the models find function rather than async as there is only one question asked.
+
 
 The method populate('author') uses the stored book author id to populate the result with the full author details. 
 
@@ -836,25 +967,25 @@ In /controllers/bookinstanceController.js replace
 
 ```javascript
 // Display list of all BookInstances.
-exports.bookinstance_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: BookInstance list');
-};
+exports.bookinstance_list = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: BookInstance list");
+});
+
+
 ```
 
 With code:
 
 ```javascript
 // Display list of all BookInstances.
-exports.bookinstance_list = function(req, res, next) {
+exports.bookinstance_list = asyncHandler(async (req, res, next) => {
+  const allBookInstances = await BookInstance.find().populate("book").exec();
 
-  BookInstance.find()
-    .populate('book')
-    .exec(function (err, list_bookinstances) {
-      if (err) { return next(err); }
-      // Successful, so render
-      res.render('bookinstance_list', { title: 'Book Instance List', bookinstance_list: list_bookinstances });
-    });   
-};
+  res.render("bookinstance_list", {
+    title: "Book Instance List",
+    bookinstance_list: allBookInstances,
+  });
+});
 ```
 Create /views/bookinstance_list.pug with content:
 
@@ -866,82 +997,29 @@ block content
 
   ul
     each val in bookinstance_list
-      li 
-        a(href=val.url) #{val.book.title} : #{val.imprint} - 
+      li
+        a(href=val.url) #{val.book.title} : #{val.imprint} -
         if val.status=='Available'
           span.text-success #{val.status}
         else if val.status=='Maintenance'
           span.text-danger #{val.status}
         else
-          span.text-warning #{val.status} 
+          span.text-warning #{val.status}
         if val.status!='Available'
           span  (Due: #{val.due_back} )
 
     else
       li There are no book copies in this library.
+
 ```
 
 In the browser:
 
 >http://127.0.0.1:3000/catalog/bookinstances
 
-![book instance  poor date  format](bookInstanceRough.png)
 
-## Date formatting
 
-The date formatting here is a bit rough so we will use the [npm moment module](https://momentjs.com/) to format dates.  Note current verion is 2.29.4.  
 
-The original tutorial we are dockerizing used momentjs, however this is now in maintenance and for new projects you should consider using [Temporal](https://momentjs.com/docs/#/-project-status/future/) which is a stage 3 proposal. (for now I am sticking with moment).
-
-Add this module to package.json (this will require a fresh install build to apply changes).
-
-```json
-{
-  "name": "myapp",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "start": "nodemon ./bin/www"
-  },
-  "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "core-js": "^3.33.2",
-    "debug": "~2.6.9",
-    "express": "^4.18.2",
-    "http-errors": "~1.6.3",
-    "morgan": "~1.9.1",
-    "nodemon": "^3.0.1",
-    "pug": "^3.0.2",
-    "mongoose":"^8.0.0",
-    "body-parser":"^1.20.2",
-    "async":"^3.2.5",
-    "moment":"2.29.4"
-  },
-  "nodemonConfig": {
-    "delay": "1500",
-    "verbose": "true"
-  }
-}
-```
-
-Stop the server running.
-
->CTRL + C
-
-> npm install
-
-```code
-added 1 package, and audited 255 packages in 911ms
-
-20 packages are looking for funding
-  run `npm fund` for details
-
-found 0 vulnerabilities
-```
-
-Restart the server
-
->npm run start
 
 In **models/bookinstance.js**  require moment and add a 'due_back_formatted' virtual below the 'url' virtual.  Edit the BookInstance Schema:
 
@@ -1023,26 +1101,23 @@ Replace
 
 ```javascript
 // Display list of all Authors.
-exports.author_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author list');
-};
+exports.author_list = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Author list");
+});
 ```
 
 With
 
 ```javascript
 // Display list of all Authors.
-exports.author_list = function(req, res, next) {
+exports.author_list = asyncHandler(async (req, res, next) => {
+  const allAuthors = await Author.find().sort({ family_name: 1 }).exec();
+  res.render("author_list", {
+    title: "Author List",
+    author_list: allAuthors,
+  });
+});
 
-  Author.find()
-    .sort([['family_name', 'ascending']])
-    .exec(function (err, list_authors) {
-      if (err) { return next(err); }
-      //Successful, so render
-      res.render('author_list', { title: 'Author List', author_list: list_authors });
-    });
-
-};
 ```
 
 The models find(), sort() and exec() functions are used to list Authors in family_name order.
@@ -1055,15 +1130,16 @@ extends layout
 
 block content
   h1= title
-  
+
   ul
     each author in author_list
-      li 
-        a(href=author.url) #{author.name} 
+      li
+        a(href=author.url) #{author.name}
         |  (#{author.date_of_birth} - #{author.date_of_death})
 
     else
       li There are no authors.
+
 ```
 
 In controllers/genreController.js
@@ -1072,26 +1148,22 @@ replace
 
 ```javascript
 // Display list of all Genre.
-exports.genre_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre list');
-};
+exports.genre_list = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Genre list");
+});
 ```
 
 With code following a similar pattern:
 
 ```javascript
-// Display list of all Genres.
-exports.genre_list = function(req, res, next) {
-
-    Genre.find()
-      .sort([['name', 'ascending']])
-      .exec(function (err, list_genres) {
-        if (err) { return next(err); }
-        //Successful, so render
-        res.render('genre_list', { title: 'Genre List', genre_list: list_genres });
-      });
-  
-  };
+// Display list of all Genre.
+exports.genre_list = asyncHandler(async (req, res, next) => {
+  const allGenres = await Genre.find().sort([['name', 'ascending']]).exec();
+  res.render("genre_list", {
+    title: "Genre List",
+   genre_list: allGenres,
+  });
+});
 ``` 
 
 Create /views/genre_list.pug with content:
@@ -1101,15 +1173,14 @@ extends layout
 
 block content
   h1= title
-  
+
   ul
     each genre in genre_list
-      li 
+      li
         a(href=genre.url) #{genre.name} 
-        | 
 
     else
-      li There are no genres
+      li There are no genres.
 ```
 
 > http://localhost:3000/catalog/authors
@@ -1122,7 +1193,7 @@ block content
 
 At this point the database is successfully being read.
 
-I leave it as an exercise to format the authorlist dates.
+I leave it as an exercise to format the authorlist dates using [Luxon](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Displaying_data/Date_formatting_using_moment) 
 
 **Commit and synchronize your site to github**
 

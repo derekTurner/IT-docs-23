@@ -797,7 +797,7 @@ services:
     entrypoint:
     - sleep
     - infinity
-    image: node:latest
+    image: node:lts-alpine
     init: true
     volumes:
     - type: bind

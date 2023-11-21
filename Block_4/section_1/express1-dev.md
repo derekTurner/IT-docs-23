@@ -1,4 +1,4 @@
-# ExpressJS wit node on Docker
+# ExpressJS with node on Docker
 
 In this section we are working towards a server side application combining, node, express and mongoDb, but first we start with a hello world from express.
 
