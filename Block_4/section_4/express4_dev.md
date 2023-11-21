@@ -1210,3 +1210,22 @@ Using this information check the following testing links which should all give t
 
 
 Next step will be to implement these routes.
+
+## Caution use LTS
+
+Code at this point works.  If you are experiencing difficulties please ensure that you are using the long term support version of node which is version 20.  Version 21 is not compatible with some of the dependancies used so should be avoided.
+
+If node --version is version 21 you can use this method to revert to the long term support version (20).
+
+Ensure you have root privelidges.  For example use the terminal in docker to access a container.
+
+Install the node library ["n"](https://www.npmjs.com/package/n).
+
+> npm install -g n
+>
+> n lts
+>
+> node --version
+
+Loads node version 20 and the application works.
+
