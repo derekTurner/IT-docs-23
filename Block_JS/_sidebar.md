@@ -6,6 +6,7 @@
 * [Local script](Block_JS/section_1/section_1b.md)
 * [External script](Block_JS/section_1/section_1c.md)
 * [Examples](Block_JS/section_1/Examples.md)
+* [Functional Programming](Block_JS/section_3/section_3.md)
 
 * [Javascript Strings](Block_JS/section_4/section_4_E6strings.md) 
 * [Javascript Arrays](Block_JS/section_4/section_4_E6arrays.md) 
